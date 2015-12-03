@@ -1,7 +1,6 @@
 package metamutator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -170,6 +169,12 @@ public class MutantSearchSpaceExplorator {
 				}
 
 				return new int[0];
+			}
+
+			@Override
+			public void remove() {
+				// TODO Auto-generated method stub
+				
 			}
 		};
 	}
