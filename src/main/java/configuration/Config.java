@@ -168,6 +168,7 @@ public class Config {
 			config.put(tabSelector[0], new HashMap<>());
 		}
 		
+		// Case where line is All:true, we need to build a key for "All"
 		if (tabSelector.length == 2 && tabSelector[0].equals("All")) {
 			config.put(tabSelector[0], new HashMap<>());
 		}
@@ -181,13 +182,16 @@ public class Config {
 
 		//if we found the arg ture off one option for a selector, we put it on the map
 		if(tabSelector.length == 4 && tabSelector[3].equals("true")){
-			config.get(tabSelector[0]).put(tabSelector[1], 0);
+			config.get(tabSelector[0]).put(tabSelector[1], selOption);
 			selOption = -1;
 		
 		}else if(tabSelector.length == 3 &&  selOption > -1 ){
 			
 				selOption ++;
 			
+		}
+		else if(tabSelector.length == 4 && tabSelector[3].equals("false")){
+			selOption++;
 		}
 		
 		return selOption;

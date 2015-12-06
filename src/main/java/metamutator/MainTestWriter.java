@@ -98,10 +98,16 @@ public class MainTestWriter {
 
 		Set<String> cles = config.keySet();
 		
-		for (String cle : cles)
+		for (String cle : cles) {
 			System.out.println("cle : "+cle);
+			Map sousmap = config.get(cle);
+			Set<String> cles2 = sousmap.keySet();
+			for (String cle2 : cles2) {
+				System.out.println("souscle : "+cle2);
+				System.out.println("valeur : "+sousmap.get(cle2));
+			}
 		
-		
+		}
 		
 		/*
 		Set selector = config.get(_class).keySet(); //TODO la j'ai besoin du nom de la class current pour savoir quel sel prendre.
