@@ -1,4 +1,4 @@
-package metamutator;
+package extension;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 
 import org.apache.commons.io.FileUtils;
 
+import metamutator.BinaryOperatorMetaMutator;
 import spoon.Launcher;
 
 public class MutatorLauncher {

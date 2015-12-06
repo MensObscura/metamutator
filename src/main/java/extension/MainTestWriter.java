@@ -1,4 +1,4 @@
-package metamutator;
+package extension;
 
 import java.io.File;
 import java.io.FileWriter;

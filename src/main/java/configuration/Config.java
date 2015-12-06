@@ -44,12 +44,10 @@ public class Config {
 	 * 
 	 */
 	private Config(){
-		
 		//Init writer and reader
 		initWriter();
 		//Init the Map
 		config = new HashMap();
-
 	}
 
 	/**
@@ -57,7 +55,6 @@ public class Config {
 	 * @return true if no ioexception , false else. 
 	 */
 	public boolean initWriter(){
-
 
 		//lecture du fichier texte	
 		try{
@@ -96,14 +93,8 @@ public class Config {
 		
 		// we init the writer to clear the file
 		initWriter();
-		
 
-		// the init is ok only if the init and the firste write return true
-		
-		if(init)	
-			return write("All:true");
-
-		//in cas of initWriterReader false , init
+		//in case of initWriterReader false , init
 		return init;
 	}
 
@@ -116,13 +107,11 @@ public class Config {
 
 		//if already read and no changed we already got the data , dont read it again !
 		if(read && !changed){
-			
 			return true;
 		}
 
 		try{
 			//reader
-			
 			String line ="";
 			
 			//The option of the selector 0 by default
@@ -132,7 +121,6 @@ public class Config {
 			//Boucle de lecture du fichier
 			while ((line=inputFile.readLine())!=null){
 				System.out.println(line);
-				
 				
 				//On envoie la ligne s'enregistrer vers la map
 				selOption = mapLine(line,selOption);
@@ -168,11 +156,6 @@ public class Config {
 			config.put(tabSelector[0], new HashMap<>());
 		}
 		
-		// Case where line is All:true, we need to build a key for "All"
-		if (tabSelector.length == 2 && tabSelector[0].equals("All")) {
-			config.put(tabSelector[0], new HashMap<>());
-		}
-		
 		//If we detect a new selector, we stock it. Option 0 by default
 		if(tabSelector.length == 2){
 			config.get(tabSelector[0]).put(tabSelector[1], 0);
@@ -185,10 +168,6 @@ public class Config {
 			config.get(tabSelector[0]).put(tabSelector[1], selOption);
 			selOption = -1;
 		
-		}else if(tabSelector.length == 3 &&  selOption > -1 ){
-			
-				selOption ++;
-			
 		}
 		else if(tabSelector.length == 4 && tabSelector[3].equals("false")){
 			selOption++;
@@ -264,7 +243,6 @@ public class Config {
 	public Map getConfig(){
 	
 		readConfig();
-		
 		
 		return config;
 	}
