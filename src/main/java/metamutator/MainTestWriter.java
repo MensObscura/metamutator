@@ -99,7 +99,7 @@ public class MainTestWriter {
 		Set<String> cles = config.keySet();
 		
 		for (String cle : cles)
-			System.out.println(cle);
+			System.out.println("cle : "+cle);
 		
 		
 		

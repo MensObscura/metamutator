@@ -164,17 +164,21 @@ public class Config {
 		tabSelector = line.split(":");
 		
 		//If we detect a new class, we built a new map
-		if(tabSelector[0].length() == 1){
+		if(tabSelector.length == 1){
+			config.put(tabSelector[0], new HashMap<>());
+		}
+		
+		if (tabSelector.length == 2 && tabSelector[0].equals("All")) {
 			config.put(tabSelector[0], new HashMap<>());
 		}
 		
 		//If we detect a new selector, we stock it. Option 0 by default
 		if(tabSelector.length == 2){
-			
 			config.get(tabSelector[0]).put(tabSelector[1], 0);
+			
 			selOption = 0;
 		}
-		
+
 		//if we found the arg ture off one option for a selector, we put it on the map
 		if(tabSelector.length == 4 && tabSelector[3].equals("true")){
 			config.get(tabSelector[0]).put(tabSelector[1], 0);
