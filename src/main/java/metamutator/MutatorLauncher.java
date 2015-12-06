@@ -60,8 +60,7 @@ public class MutatorLauncher {
 			launcher.addProcessor(new BinaryOperatorMetaMutator());
 				
 			launcher.run();
-				
-			//TODO: Générer fichier de config
+			
 			
 		}
 		else if (args.length == 3 && args[0].equals("-test")) {
@@ -69,17 +68,11 @@ public class MutatorLauncher {
 			String testsdirectory = args[1];
 			
 			String testpackage = args[2];
-						
-			FileWriter file = new FileWriter(testsdirectory+"/MainTest.java");
-			
-			PrintWriter out = new PrintWriter(file);
-			
-			MainTestWriter writer = new MainTestWriter(out, testpackage, testsdirectory);
+									
+			MainTestWriter writer = new MainTestWriter(testpackage, testsdirectory);
 			
 			writer.writeMainTest();
-			
-			out.close();
-			
+						
 		}
 		else {
 			 //TODO BAD USE -> make usage()

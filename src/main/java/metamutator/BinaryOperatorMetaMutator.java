@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 
+import configuration.Config;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.BinaryOperatorKind;
 import spoon.reflect.code.CtBinaryOperator;
@@ -24,9 +25,12 @@ import spoon.reflect.reference.CtTypeReference;
  * inserts a mutation hotspot for each binary operator
  */
 public class BinaryOperatorMetaMutator extends
-		AbstractProcessor<CtBinaryOperator<Boolean>> {
+AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 	public static final String SELECTOR_CLASS = Selector.class.getName();
+
+	//the place where we'll wrote the configuration.
+	public static Config conf = Config.getInitInstance();
 
 	private static int index = 0;
 
@@ -40,6 +44,8 @@ public class BinaryOperatorMetaMutator extends
 			.of(BinaryOperatorKind.EQ, BinaryOperatorKind.NE);
 
 	private Set<CtElement> hostSpots = Sets.newHashSet();
+
+	private String className ="";
 
 	@Override
 	public boolean isToBeProcessed(CtBinaryOperator<Boolean> element) {
@@ -65,40 +71,47 @@ public class BinaryOperatorMetaMutator extends
 		return (LOGICAL_OPERATORS.contains(element.getKind()) || COMPARISON_OPERATORS
 				.contains(element.getKind()))
 				&& (element.getParent(CtAnonymousExecutable.class) == null) // not
-																			// in
-																			// static
-																			// block
-		;
+				// in
+				// static
+				// block
+				;
 	}
 
 	public void process(CtBinaryOperator<Boolean> binaryOperator) {
 		BinaryOperatorKind kind = binaryOperator.getKind();
 
+		//on sauvegarde le nom de la class, et s'il change on le note dans les configs.
+		String currentClass =binaryOperator.getParent(CtClass.class).getSimpleName();
+		if(!(this.className.equals(currentClass))){
+			this.className =  currentClass;
+			conf.write(this.className);
+		}
+
 		if (LOGICAL_OPERATORS.contains(kind)) {
 			mutateOperator(binaryOperator, LOGICAL_OPERATORS);
 		} else if (COMPARISON_OPERATORS.contains(kind)) {
 			if (isNumber(binaryOperator.getLeftHandOperand())
-			 || isNumber(binaryOperator.getRightHandOperand()))
+					|| isNumber(binaryOperator.getRightHandOperand()))
 			{
 				mutateOperator(binaryOperator, COMPARISON_OPERATORS);
 			}
-			 else {
-			 mutateOperator(binaryOperator, REDUCED_COMPARISON_OPERATORS);
-			 }
+			else {
+				mutateOperator(binaryOperator, REDUCED_COMPARISON_OPERATORS);
+			}
 		}
 	}
 
 	private boolean isNumber(CtExpression<?> operand) {
 		return operand.getType().getSimpleName().equals("int")
-			|| operand.getType().getSimpleName().equals("long")
-			|| operand.getType().getSimpleName().equals("byte")
-			|| operand.getType().getSimpleName().equals("char")
-		|| operand.getType().getSimpleName().equals("float")
-		|| operand.getType().getSimpleName().equals("double")
-		|| Number.class.isAssignableFrom(operand.getType().getActualClass());
+				|| operand.getType().getSimpleName().equals("long")
+				|| operand.getType().getSimpleName().equals("byte")
+				|| operand.getType().getSimpleName().equals("char")
+				|| operand.getType().getSimpleName().equals("float")
+				|| operand.getType().getSimpleName().equals("double")
+				|| Number.class.isAssignableFrom(operand.getType().getActualClass());
 	}
 
-/**
+	/**
 	 * Converts "a op b" bean op one of "<", "<=", "==", ">=", "!=" to:
 	 *    (  (op(1, 0, "<")  && (a < b))
 	 *    || (op(1, 1, "<=") && (a <= b))
@@ -120,9 +133,9 @@ public class BinaryOperatorMetaMutator extends
 		if (alreadyInHotsSpot(expression)
 				|| expression.toString().contains(".is(\"")) {
 			System.out
-					.println(String
-							.format("Expression '%s' ignored because it is included in previous hot spot",
-									expression));
+			.println(String
+					.format("Expression '%s' ignored because it is included in previous hot spot",
+							expression));
 			return;
 		}
 
@@ -180,11 +193,16 @@ public class BinaryOperatorMetaMutator extends
 			EnumSet<BinaryOperatorKind> operators) {
 
 		long hashCode = (element.getPosition().toString() + element.getParent()
-				.toString()).hashCode();
+		.toString()).hashCode();
 
 		CtTypeReference<Object> fieldType = getFactory().Type()
 				.createTypeParameterReference(SELECTOR_CLASS);
 		String selectorId = "_s" + index;
+
+
+		//we add the new selector in the config file
+		conf.write(this.className+":"+selectorId);
+
 
 		CtCodeSnippetExpression<Object> codeSnippet = getFactory().Core()
 				.createCodeSnippetExpression();
@@ -199,13 +217,14 @@ public class BinaryOperatorMetaMutator extends
 
 		// the original operator, always the first one
 		sb.append('"').append(originalKind).append('"');
-
+		conf.write(this.className+":"+selectorId+":"+originalKind+":true");
 		// the other alternatives
 		for (BinaryOperatorKind kind : operators) {
 			if (kind.toString().equals(originalKind)) {
 				continue;
 			}
 			sb.append(',').append('"').append(kind).append('"');
+			conf.write(this.className+":"+selectorId+":"+kind+":false");
 		}
 
 		sb.append("})");

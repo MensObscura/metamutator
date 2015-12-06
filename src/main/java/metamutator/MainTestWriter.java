@@ -1,23 +1,34 @@
 package metamutator;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import configuration.Config;
 
 public class MainTestWriter {
 	
 	private PrintWriter printW;
 	private List<String> files;
 	private String _package;
+	public static Config conf;
 	
-	public MainTestWriter(PrintWriter pw, String testpackage, String repertoryPath) {
-		printW = pw;
+	public MainTestWriter(String testpackage, String repertoryPath) throws IOException {
 		_package = testpackage;
 		files = new ArrayList<String>();
 		
 		File repertory = new File(repertoryPath);
-		this.initFilesList(repertory);		
+		this.initFilesList(repertory);	
+		
+		FileWriter file = new FileWriter(repertoryPath+"/MainTest.java");
+		
+		printW  = new PrintWriter(file);
 
 	}
 	
@@ -57,29 +68,54 @@ public class MainTestWriter {
 		
 		printW.println("@RunWith(Suite.class)");
 		
-		this.writeSuite();
+		writeSuite();
 		
-		printW.println();
 		printW.println("public class MainTest {");
 		printW.println("@BeforeClass");
 		printW.println("public static void suiteSetup() {");
 		
 		printW.println("Interpreter bsh = new Interpreter();");
-		this.writeConstructorsCalls();
 		
-		this.writeConfig();
+		writeConstructorsCalls();
+		
+		writeConfig();
 		
 		printW.println("Selector sel=Selector.getSelectorByName(\"_s1\");");
 		printW.println("sel.choose(1);");
 		
 		
 		printW.println("}");
-		printW.println("}");	
+		printW.println("}");
+		
+		printW.close();
 	}
 
 	private void writeConfig() {
-		//TODO : choisir les bonnes configurations avec fichier config.
 		
+		//We get the config, and we put it in the test code.
+		conf = Config.getInstance();
+		Map<String,Map> config = conf.getConfig();
+
+		Set<String> cles = config.keySet();
+		
+		for (String cle : cles)
+			System.out.println(cle);
+		
+		
+		
+		/*
+		Set selector = config.get(_class).keySet(); //TODO la j'ai besoin du nom de la class current pour savoir quel sel prendre.
+
+		Iterator itr = selector.iterator();
+		while(itr.hasNext()) {
+			String currentSel = (String) itr.next();
+			String option = (String) config.get(_class).get(currentSel); //TODO ici aussi du coup
+
+			printW.println("Selector sel=Selector.getSelectorByName(\""+currentSel+"\");");
+			printW.println("sel.choose();");
+
+		}
+		*/	
 	}
 
 	private void writeConstructorsCalls() {
@@ -90,7 +126,7 @@ public class MainTestWriter {
 	}
 
 	private void writeSuite() {
-		printW.println("@SuiteClasses({");
+		printW.print("@SuiteClasses({");
 		for (int i=0; i < files.size(); i++) {
 			String classfilename = files.get(i).replace(".java", ".class");
 			if (i != files.size() - 1)
@@ -98,7 +134,7 @@ public class MainTestWriter {
 			else
 				printW.print(classfilename);
 		}
-		printW.print("})");
+		printW.println("})");
 	}
 
 }
