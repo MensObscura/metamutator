@@ -45,8 +45,7 @@ public class Config {
 	 * 
 	 */
 	private Config(){
-		//Init writer and reader
-		initWriter();
+		
 		//Init the Map
 		config = new HashMap();
 	}
@@ -95,7 +94,7 @@ public class Config {
 		return init;
 	}
 	/**
-	 * We init the reader.
+	 * We initialize the reader.
 	 */
 	private void initReader(){
 		//reader
