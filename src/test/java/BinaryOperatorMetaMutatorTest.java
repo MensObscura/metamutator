@@ -1,7 +1,7 @@
 import static org.apache.commons.lang.reflect.MethodUtils.invokeExactMethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import metamutator.BinaryOperatorMetaMutator;
+import metamutator.ChangetoNullVariableMetaMutator;
 import metamutator.Selector;
 
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class BinaryOperatorMetaMutatorTest {
         // build the model and apply the transformation
         Launcher l = new Launcher();
         l.addInputResource("src/test/java");
-        l.addProcessor(new BinaryOperatorMetaMutator());
+        l.addProcessor(new ChangetoNullVariableMetaMutator());
         l.run();
 
         // now we get the code of Foo

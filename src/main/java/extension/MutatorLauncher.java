@@ -8,8 +8,8 @@ import java.io.PrintWriter;
 import org.apache.commons.io.FileUtils;
 
 import configuration.Config;
+import metamutator.ChangetoNullVariableMetaMutator;
 import metamutator.BinaryOperatorMetaMutator;
-import metamutator.BinaryOperatorMetaMutator2;
 import spoon.Launcher;
 
 public class MutatorLauncher {
@@ -34,7 +34,7 @@ public class MutatorLauncher {
 	 * 
 	 * paramètres pour lancer la modification du mutant :
 	 * 		-test <path des tests> <package du test>
-	 * ex : -test /home/jean-loup/M2/OPL/projetTestMutant/src/test/java package
+	 * ex : -test /home/jean-loup/M2/OPL/projetTestMutant/src/test/java
 	 */
 	public static void main(String[] args) throws Exception {
 		
@@ -62,8 +62,8 @@ public class MutatorLauncher {
 			final Launcher launcher = new Launcher();
 			launcher.setArgs(arguments);
 						
-		//launcher.addProcessor(new BinaryOperatorMetaMutator());
-			launcher.addProcessor(new BinaryOperatorMetaMutator2());
+			//launcher.addProcessor(new BinaryOperatorMetaMutator());
+			launcher.addProcessor(new ChangetoNullVariableMetaMutator());
 				
 			launcher.run();
 			
