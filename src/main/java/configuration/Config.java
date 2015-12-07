@@ -153,7 +153,7 @@ public class Config {
 		tabSelector = line.split(":");
 		
 		//If we detect a new class, we built a new map
-		if(tabSelector.length == 1){
+		if(tabSelector.length == 1 && !config.containsKey(tabSelector[0])){
 			config.put(tabSelector[0], new HashMap<>());
 		}
 		
@@ -249,13 +249,13 @@ public class Config {
 	}
 
 	/**
-	 * To get the config wraped in a map, filtered by a selector TODO or a class
+	 * To get the config wraped in a map, filtered by  a class
 	 * @param selector the selector wished
 	 * @return the map which contain the config for the selector
 	 */
-	public Map getConfig(String selector){
-		//TODO
-		return new HashMap();
+	public Map getConfig(String classe){
+	
+		return config.get(classe);
 	}
 
 	/**
