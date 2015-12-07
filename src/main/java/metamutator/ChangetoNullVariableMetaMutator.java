@@ -29,7 +29,7 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral
 	public static Config conf = Config.getInstance();
 
 	private static int index = 0;
-	
+	private static final int procId = 2;
 	private enum STATE {
 		NULL, NOTNULL
 	};
@@ -163,7 +163,7 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral
 				.createCodeSnippetExpression();
 
 		StringBuilder sb = new StringBuilder(SELECTOR_CLASS + ".of(")
-				.append(index);
+				.append(procId+""+index);
 
 		sb.append(',');
 

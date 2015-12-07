@@ -31,7 +31,7 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 	//the place where we'll wrote the configuration.
 	public static Config conf = Config.getInstance();
-
+	private static final int procId = 1;
 	private static int index = 0;
 
 	private static final EnumSet<BinaryOperatorKind> LOGICAL_OPERATORS = EnumSet
@@ -208,8 +208,8 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 				.createCodeSnippetExpression();
 
 		StringBuilder sb = new StringBuilder(SELECTOR_CLASS + ".of(")
-				.append(index);
-
+				.append(procId+""+index);
+		
 		sb.append(',');
 
 		// now the options
