@@ -24,7 +24,7 @@ import spoon.reflect.reference.CtTypeReference;
 /**
  * inserts a mutation hotspot for each binary operator
  */
-public class BinaryOperatorMetaMutator extends
+public class BinaryOperatorMetaMutator2 extends
 AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 	public static final String SELECTOR_CLASS = Selector.class.getName();
@@ -146,7 +146,7 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 				.stream()
 				.map(kind -> {
 					expression.setKind(kind);
-					return String.format("(_s%s.is(\"%s\") && (%s))",
+					return String.format("(_bo%s.is(\"%s\") && (%s))",
 							thisIndex, kind, expression);
 				}).collect(Collectors.joining(" || "));
 
@@ -197,7 +197,7 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 		CtTypeReference<Object> fieldType = getFactory().Type()
 				.createTypeParameterReference(SELECTOR_CLASS);
-		String selectorId = "_s" + index;
+		String selectorId = "_bo" + index;
 
 
 		//we add the new selector in the config file

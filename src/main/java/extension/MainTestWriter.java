@@ -19,7 +19,7 @@ public class MainTestWriter {
 	private String repertoryPath;
 	public static Config conf;
 	
-	public MainTestWriter(String test, String repertoryPath) throws IOException {
+	public MainTestWriter(String repertoryPath) throws IOException {
 		files = new ArrayList<String>();
 		
 		File repertory = new File(repertoryPath);
@@ -49,7 +49,8 @@ public class MainTestWriter {
 			else {
 				if (isJAVAFile(f)) {
 					String filename = f.getName();
-					files.add(filename);
+					if (!filename.equals("MainTest.java"))
+						files.add(filename);
 				}
 			}
 		}

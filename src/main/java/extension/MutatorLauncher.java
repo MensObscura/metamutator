@@ -7,7 +7,9 @@ import java.io.PrintWriter;
 
 import org.apache.commons.io.FileUtils;
 
+import configuration.Config;
 import metamutator.BinaryOperatorMetaMutator;
+import metamutator.BinaryOperatorMetaMutator2;
 import spoon.Launcher;
 
 public class MutatorLauncher {
@@ -48,7 +50,9 @@ public class MutatorLauncher {
 			} catch (IOException e) {
 				throw new Exception("Not found directory "+projectdirectory);
 			}
-				
+			
+			//initialisation of config file
+			Config.getInitInstance();
 				
 			final String[] arguments = {
 					"-i", projectdirectory+dest,
@@ -58,19 +62,19 @@ public class MutatorLauncher {
 			final Launcher launcher = new Launcher();
 			launcher.setArgs(arguments);
 						
-			launcher.addProcessor(new BinaryOperatorMetaMutator());
+			//launcher.addProcessor(new BinaryOperatorMetaMutator());
+			launcher.addProcessor(new BinaryOperatorMetaMutator2());
 				
 			launcher.run();
 			
 			
 		}
-		else if (args.length == 3 && args[0].equals("-test")) {
+		else if (args.length == 2 && args[0].equals("-test")) {
 			
 			String testsdirectory = args[1];
 			
-			String testpackage = args[2];
 									
-			MainTestWriter writer = new MainTestWriter(testpackage, testsdirectory);
+			MainTestWriter writer = new MainTestWriter(testsdirectory);
 			
 			writer.writeMainTest();
 						
