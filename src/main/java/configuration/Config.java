@@ -91,6 +91,7 @@ public class Config {
 	 */
 	public boolean initConfig(){
 		
+		System.out.println("init");
 		// we init the writer to clear the file
 		initWriter();
 

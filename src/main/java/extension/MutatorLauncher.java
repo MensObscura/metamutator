@@ -62,7 +62,7 @@ public class MutatorLauncher {
 			final Launcher launcher = new Launcher();
 			launcher.setArgs(arguments);
 						
-			//launcher.addProcessor(new BinaryOperatorMetaMutator());
+		//launcher.addProcessor(new BinaryOperatorMetaMutator());
 			launcher.addProcessor(new BinaryOperatorMetaMutator2());
 				
 			launcher.run();
