@@ -2,16 +2,12 @@ package metamutator;
 
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 
 import configuration.Config;
 import spoon.processing.AbstractProcessor;
-import spoon.reflect.code.BinaryOperatorKind;
-import spoon.reflect.code.CtBinaryOperator;
 import spoon.reflect.code.CtCodeSnippetExpression;
-import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtLiteral;
 import spoon.reflect.declaration.CtAnonymousExecutable;
 import spoon.reflect.declaration.CtClass;

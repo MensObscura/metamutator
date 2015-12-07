@@ -32,7 +32,7 @@ public class Selector {
 		// defensive copy
 		selector.variants = variants.clone();
 		//selector.locationHashCode = locationHashCode;
-
+		
 		selectors.put(hotSpot, selector);
 
 		return selector;

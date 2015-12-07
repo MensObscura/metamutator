@@ -65,7 +65,7 @@ public class MainTestWriter {
 		printW.println("import bsh.Interpreter;");
 		printW.println("import metamutator.Selector;");
 		
-		importPackage();
+		importPackage(repertoryPath,"");
 		
 		printW.println("@RunWith(Suite.class)");
 		
@@ -86,11 +86,20 @@ public class MainTestWriter {
 		printW.close();
 	}
 
-	private void importPackage() {
-		File f = new File(repertoryPath);
+	private void importPackage(String path, String _package) {
+		File f = new File(path);
+		if (f.isFile())
+			return;
 		for (File sf : f.listFiles()) {
-			if (sf.isDirectory())
-				printW.println("import "+sf.getName()+".*;");
+			if (sf.isDirectory()) {
+				printW.println("import "+_package+sf.getName()+".*;");
+				for (File sf2 : sf.listFiles()) {
+					if (_package.length() != 0)
+						importPackage(path+"/"+sf.getName(),_package+"."+sf.getName()+".");
+					else
+						importPackage(path+"/"+sf.getName(),sf.getName()+".");
+				}
+			}
 		}		
 	}
 
