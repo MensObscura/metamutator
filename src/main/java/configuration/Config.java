@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -59,18 +60,13 @@ public class Config {
 		//lecture du fichier texte	
 		try{
 
-			if (new File(file).exists()) {
-				//reader
-				FileInputStream ips = new FileInputStream(file);
-				InputStreamReader isr = new InputStreamReader(ips);
-				inputFile = new BufferedReader(isr);
-			}
-			else {
+			
+			
 				//writer
 				FileWriter fw = new FileWriter (file); 
 				BufferedWriter bw = new BufferedWriter (fw);
 				outputFile= new PrintWriter (bw); 
-			}
+			
 						
 
 		}		
@@ -98,6 +94,22 @@ public class Config {
 		//in case of initWriterReader false , init
 		return init;
 	}
+	/**
+	 * We init the reader.
+	 */
+	private void initReader(){
+		//reader
+		FileInputStream ips;
+		try {
+			ips = new FileInputStream(file);
+	
+		InputStreamReader isr = new InputStreamReader(ips);
+		inputFile = new BufferedReader(isr);
+		
+		} catch (FileNotFoundException e) {
+			System.out.println("Error when opening the config file : "+e);
+		}
+	}
 
 
 	/**
@@ -112,7 +124,9 @@ public class Config {
 		}
 
 		try{
-			//reader
+			//reader initialisation
+			initReader();
+			
 			String line ="";
 			
 			//The option of the selector 0 by default
@@ -222,7 +236,7 @@ public class Config {
 		}
 		//add mutant in config file
 		try {
-
+			
 			outputFile.println (mutant); 
 			outputFile.flush();
 			String value = (mutant.split(":"))[mutant.split(":").length - 1];
@@ -231,7 +245,7 @@ public class Config {
 		}
 
 		catch (Exception e){
-			System.err.println("Error when writing in config file "+e.toString());
+			System.err.println("Error when writing in config file "+e);
 			return false;
 		}	
 		return true;
