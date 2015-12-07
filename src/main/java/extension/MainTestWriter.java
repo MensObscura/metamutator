@@ -16,11 +16,10 @@ public class MainTestWriter {
 	
 	private PrintWriter printW;
 	private List<String> files;
-	private String _package;
+	private String repertoryPath;
 	public static Config conf;
 	
-	public MainTestWriter(String testpackage, String repertoryPath) throws IOException {
-		_package = testpackage;
+	public MainTestWriter(String test, String repertoryPath) throws IOException {
 		files = new ArrayList<String>();
 		
 		File repertory = new File(repertoryPath);
@@ -28,6 +27,7 @@ public class MainTestWriter {
 		
 		FileWriter file = new FileWriter(repertoryPath+"/MainTest.java");
 		
+		this.repertoryPath = repertoryPath;
 		printW  = new PrintWriter(file);
 
 	}
@@ -64,7 +64,8 @@ public class MainTestWriter {
 		printW.println("import org.junit.runners.Suite.SuiteClasses;");
 		printW.println("import bsh.Interpreter;");
 		printW.println("import metamutator.Selector;");
-		printW.println("import "+_package+".*;");
+		
+		importPackage();
 		
 		printW.println("@RunWith(Suite.class)");
 		
@@ -74,20 +75,23 @@ public class MainTestWriter {
 		printW.println("@BeforeClass");
 		printW.println("public static void suiteSetup() {");
 		
+		printW.println("Selector sel;");
 		printW.println("Interpreter bsh = new Interpreter();");
-		
-		writeConstructorsCalls();
-		
-		writeConfig();
-		
-		printW.println("Selector sel=Selector.getSelectorByName(\"_s1\");");
-		printW.println("sel.choose(1);");
-		
+				
+		writeConfig();		
 		
 		printW.println("}");
 		printW.println("}");
 		
 		printW.close();
+	}
+
+	private void importPackage() {
+		File f = new File(repertoryPath);
+		for (File sf : f.listFiles()) {
+			if (sf.isDirectory())
+				printW.println("import "+sf.getName()+".*;");
+		}		
 	}
 
 	private void writeConfig() {
@@ -99,36 +103,18 @@ public class MainTestWriter {
 		Set<String> cles = config.keySet();
 		
 		for (String cle : cles) {
-			System.out.println("cle : "+cle);
+			printW.println("new "+cle+"();");
+
 			Map sousmap = config.get(cle);
 			Set<String> cles2 = sousmap.keySet();
+			
 			for (String cle2 : cles2) {
-				System.out.println("souscle : "+cle2);
-				System.out.println("valeur : "+sousmap.get(cle2));
+				printW.println("sel=Selector.getSelectorByName(\""+cle2+"\");");
+				printW.println("sel.choose("+sousmap.get(cle2)+");");
 			}
 		
 		}
 		
-		/*
-		Set selector = config.get(_class).keySet(); //TODO la j'ai besoin du nom de la class current pour savoir quel sel prendre.
-
-		Iterator itr = selector.iterator();
-		while(itr.hasNext()) {
-			String currentSel = (String) itr.next();
-			String option = (String) config.get(_class).get(currentSel); //TODO ici aussi du coup
-
-			printW.println("Selector sel=Selector.getSelectorByName(\""+currentSel+"\");");
-			printW.println("sel.choose();");
-
-		}
-		*/	
-	}
-
-	private void writeConstructorsCalls() {
-		for (int i=0; i < files.size(); i++) {
-			String classfilename = files.get(i).replace("Test.java", "()");
-			printW.println("new "+classfilename+";");
-		}	
 	}
 
 	private void writeSuite() {
