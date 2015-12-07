@@ -1,9 +1,7 @@
 package extension;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import org.apache.commons.io.FileUtils;
 
@@ -62,7 +60,7 @@ public class MutatorLauncher {
 			final Launcher launcher = new Launcher();
 			launcher.setArgs(arguments);
 						
-			//launcher.addProcessor(new BinaryOperatorMetaMutator());
+			launcher.addProcessor(new BinaryOperatorMetaMutator());
 			launcher.addProcessor(new ChangetoNullVariableMetaMutator());
 				
 			launcher.run();
