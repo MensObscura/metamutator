@@ -47,14 +47,14 @@ public class Config {
 	private Config(){
 		
 		//Init the Map
-		config = new HashMap();
+		config = new HashMap<String, Map>();
 	}
 
 	/**
 	 * init the writer and read of the config file
 	 * @return true if no ioexception , false else. 
 	 */
-	public boolean initWriter(){
+	private boolean initWriter(){
 
 		//lecture du fichier texte	
 		try{
@@ -86,7 +86,7 @@ public class Config {
 	 */
 	public boolean initConfig(){
 		
-		System.out.println("init");
+		
 		// we init the writer to clear the file
 		initWriter();
 
@@ -96,11 +96,16 @@ public class Config {
 	/**
 	 * We initialize the reader.
 	 */
-	private void initReader(){
+	private void initReader(String filename){
 		//reader
+		
+		if(filename == null)
+		    filename = file;
+		
 		FileInputStream ips;
+		config= new HashMap();
 		try {
-			ips = new FileInputStream(file);
+			ips = new FileInputStream(filename);
 	
 		InputStreamReader isr = new InputStreamReader(ips);
 		inputFile = new BufferedReader(isr);
@@ -115,7 +120,7 @@ public class Config {
 	 * We will read the config file, and set the config map.
 	 * @return true if everythings append well, false else.
 	 */
-	public boolean readConfig(){
+	private boolean readConfig(String filename){
 
 		//if already read and no changed we already got the data , dont read it again !
 		if(read && !changed){
@@ -124,7 +129,7 @@ public class Config {
 
 		try{
 			//reader initialisation
-			initReader();
+			initReader(filename);
 			
 			String line ="";
 			
@@ -166,12 +171,12 @@ public class Config {
 		tabSelector = line.split(":");
 		
 		//If we detect a new class, we built a new map
-		if(tabSelector.length == 1 && !config.containsKey(tabSelector[0])){
+		if(tabSelector.length >= 1 && !config.containsKey(tabSelector[0])){
 			config.put(tabSelector[0], new HashMap<>());
 		}
 		
 		//If we detect a new selector, we stock it. Option 0 by default
-		if(tabSelector.length == 2){
+		if(tabSelector.length >=2 && !config.get(tabSelector[0]).containsKey(tabSelector[1])){
 			config.get(tabSelector[0]).put(tabSelector[1], 0);
 			
 			selOption = 0;
@@ -256,19 +261,21 @@ public class Config {
 	 */
 	public Map getConfig(){
 	
-		readConfig();
+		readConfig(null);
 		
 		return config;
 	}
 
 	/**
-	 * To get the config wraped in a map, filtered by  a class
+	 * To get the config wraped in a map, filtered by file name.
 	 * @param selector the selector wished
 	 * @return the map which contain the config for the selector
 	 */
-	public Map getConfig(String classe){
+	public Map<String,Map> getConfig(String filename){
 	
-		return config.get(classe);
+		readConfig(filename);
+		
+		return config;
 	}
 
 	/**

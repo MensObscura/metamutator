@@ -47,6 +47,10 @@ public class Selector {
 		this.identifier= identifier;
 		return this;
 	}
+	
+	public String getId() {
+		return this.identifier;
+	}
 
 	public void choose(int option) {
 		if (option<0 || option>=variants.length) {
@@ -86,6 +90,10 @@ public class Selector {
 		return variants.length;
 	}
 
+	public String[] getOption() {
+		return variants;
+	}
+	
 	public void setStopTime(long stopTime) {
 
 		this.stopTime = stopTime;
@@ -95,6 +103,10 @@ public class Selector {
 		return "id:"+hotSpot+",h:"+locationHashCode;
 	}
 
+	public Class getLocationClass(){
+		
+		return locationClass;
+	}
 	public String getChosenOptionDescription() {
 
 		return getIdentifier()+",v:"+variants[chosenVariant];

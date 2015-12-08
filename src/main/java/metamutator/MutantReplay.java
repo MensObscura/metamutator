@@ -5,7 +5,8 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.internal.TextListener;
 import org.junit.runner.JUnitCore;
@@ -19,7 +20,7 @@ import com.google.common.collect.Multimaps;
 import configuration.Config;
 
 
-public class MutantSearchSpaceExplorator {
+public class MutantReplay {
 
 	public static void runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
 
@@ -33,11 +34,13 @@ public class MutantSearchSpaceExplorator {
 		JUnitCore core = new JUnitCore();
 		
 		//output folder
-		File fail = new File("fail");
+		File fail = new File("fail.replay");
 		fail.mkdirs();
-		File sucess = new File("sucess");
+		File sucess = new File("sucess.replay");
 		sucess.mkdirs();
 
+		File[] mutants = new File("sucess").listFiles();
+		
 		// we first run the test suite once to load all classes and their static
 		// fields
 		// this registers only the executed ifs, so indirectly
@@ -65,34 +68,31 @@ public class MutantSearchSpaceExplorator {
 		
 		int nattempts=0;
 		
-		for (int sel = 0; sel < selectors.size(); sel++) {
-			outputTraces.println(selectors.get(sel).getIdentifier());
-			
-			//int k=0;
-			System.out.println(selectors.get(sel).getOptionCount());
-			for (int k = 0; k < selectors.get(sel).getOptionCount(); k++) 
-			{
+		for(int mut = 0; mut < mutants.length;mut++ ){
 				Config conf = Config.getInitInstance();
-
+				Map<String,String> mapedConf = conf.getConfig(mutants[mut].getPath()).get(TEST_CLASS.getName());
 			
+				Set<String> cles = mapedConf.keySet();
+				
 				int[] options = new int[selectors.size()];
-				// System.out.println(Arrays.toString(options));
-				for (int i = options.length - 1; i >= 0; i--) {
-					selectors.get(i).choose(0);
-					selectors.get(i).setStopTime(
-							System.currentTimeMillis() + 300000);
-					strOptions[i] = selectors.get(i)
-							.getChosenOptionDescription();
-					for(int o = 0; o < selectors.get(i).getOptionCount();o++ ){
-						
-					boolean value =(o == 0)?true:false;
+				int sel = 0;
+				for (String cle : cles) {
 					
-					conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":true");
+					Selector.getSelectorByName(cle).choose(Integer.parseInt(mapedConf.get(cle)));
+					Selector.getSelectorByName(cle).setStopTime(
+							System.currentTimeMillis() + 300000);
+					strOptions[sel] = Selector.getSelectorByName(cle)
+							.getChosenOptionDescription();
+					for(int o = 0; o < Selector.getSelectorByName(cle).getOptionCount();o++ ){
+						
+					boolean value =(o == Integer.parseInt(mapedConf.get(cle)))?true:false;
+					
+					conf.write(	Selector.getSelectorByName(cle).getLocationClass().getName()+":"+Selector.getSelectorByName(cle).getId()+":"+Selector.getSelectorByName(cle).getOption()[o]+":true");
 					
 					}
+					sel ++;
 				}
-				selectors.get(sel).choose(k);
-
+				
 				if (debug)
 					System.out.println("Checking options: "
 							+ Arrays.toString(options));
@@ -105,7 +105,7 @@ public class MutantSearchSpaceExplorator {
 							+ Arrays.toString(strOptions));
 					
 			                // On essaye avec renameTo
-					File dest = new File("sucess/mutant"+sel+""+k+".txt");
+					File dest = new File(sucess.getPath()+"/"+mutants[mut].getName());
 			                new File("config.txt").renameTo(dest);
 				} else {
 					String txt = String
@@ -120,12 +120,12 @@ public class MutantSearchSpaceExplorator {
 					failures.add(txt);
 					failures2.put(result.getFailureCount(), txt);
 					System.out.println(result.getFailures().get(0).getException());
-					File dest = new File("fail/mutant"+sel+""+k+".txt");
+					File dest = new File(fail.getPath()+"/"+mutants[mut].getName());
 	                new File("config.txt").renameTo(dest);
 				}
 			}
 
-		}
+		
 
 		System.out.println("killed "+failures.size());
 		System.out.println("alive "+successes.size());

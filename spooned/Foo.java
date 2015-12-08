@@ -15,10 +15,10 @@ public class Foo {
         return ((_bo3.is("EQ") && ((Foo.class) == c)) || (_bo3.is("NE") && ((Foo.class) != c)));
     }
 
-    private static final metamutator.Selector _bo1 = metamutator.Selector.of(1,new String[]{"OR","AND"}).in(Foo.class).id("_bo1");
+    private static final metamutator.Selector _bo1 = metamutator.Selector.of(11,new String[]{"OR","AND"}).in(Foo.class).id("_bo1");
 
-    private static final metamutator.Selector _bo2 = metamutator.Selector.of(2,new String[]{"GT","EQ","NE","LT","LE","GE"}).in(Foo.class).id("_bo2");
+    private static final metamutator.Selector _bo2 = metamutator.Selector.of(12,new String[]{"GT","EQ","NE","LT","LE","GE"}).in(Foo.class).id("_bo2");
 
-    private static final metamutator.Selector _bo3 = metamutator.Selector.of(3,new String[]{"EQ","NE"}).in(Foo.class).id("_bo3");
+    private static final metamutator.Selector _bo3 = metamutator.Selector.of(13,new String[]{"EQ","NE"}).in(Foo.class).id("_bo3");
 }
 

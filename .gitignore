@@ -1,4 +1,7 @@
 /target/
 .settings
 .classpath
-
+spooned/*
+config.txt
+sponned/
+src/test/javaMutant/*
