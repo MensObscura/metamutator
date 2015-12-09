@@ -32,8 +32,8 @@ public class MutantReplay {
 		//output folder
 		File fail = new File("fail.replay");
 		fail.mkdirs();
-		File sucess = new File("sucess.replay");
-		sucess.mkdirs();
+		File success = new File("success.replay");
+		success.mkdirs();
 
 		File[] mutants = new File("fail").listFiles();
 		
@@ -102,7 +102,7 @@ public class MutantReplay {
 							+ Arrays.toString(strOptions));
 					
 			                // On essaye avec renameTo
-					File dest = new File(sucess.getPath()+"/"+mutants[mut].getName());
+					File dest = new File(success.getPath()+"/"+mutants[mut].getName());
 			                new File("config.txt").renameTo(dest);
 				} else {
 					String txt = String

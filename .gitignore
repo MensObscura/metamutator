@@ -6,6 +6,6 @@ config.txt
 sponned/
 src/test/javaMutant/*
 fail/*
-sucess/*
+success/*
 fail.replay/*
-sucess.replay/*
+success.replay/*

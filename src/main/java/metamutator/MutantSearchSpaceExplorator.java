@@ -31,8 +31,8 @@ public class MutantSearchSpaceExplorator {
 		//output folder
 		File fail = new File("fail");
 		fail.mkdirs();
-		File sucess = new File("sucess");
-		sucess.mkdirs();
+		File success = new File("success");
+		success.mkdirs();
 
 		// we first run the test suite once to load all classes and their static
 		// fields
@@ -79,7 +79,7 @@ public class MutantSearchSpaceExplorator {
 					strOptions[i] = selectors.get(i)
 							.getChosenOptionDescription();
 					for(int o = 0; o < selectors.get(i).getOptionCount();o++ ){
-<<<<<<< HEAD
+
 
 						boolean value =(o == 0)?true:false;
 						if(i == sel && o ==k){
@@ -90,13 +90,7 @@ public class MutantSearchSpaceExplorator {
 							
 							conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":"+value);
 						}
-=======
-						
-					boolean value =(o == 0)?true:false;
-					
-					conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":"+value);
-					
->>>>>>> d532dc936a8890c63a774511d1cf8bfac70c2261
+
 					}
 				}
 				selectors.get(sel).choose(k);
@@ -113,7 +107,7 @@ public class MutantSearchSpaceExplorator {
 							+ Arrays.toString(strOptions));
 
 					// On essaye avec renameTo
-					File dest = new File("sucess/mutant"+sel+""+k+".txt");
+					File dest = new File("success/mutant"+sel+""+k+".txt");
 					new File("config.txt").renameTo(dest);
 				} else {
 					String txt = String
