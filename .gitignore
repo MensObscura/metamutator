@@ -5,7 +5,4 @@ spooned/*
 config.txt
 sponned/
 src/test/javaMutant/*
-fail/*
-success/*
-fail.replay/*
-success.replay/*
+results/*
