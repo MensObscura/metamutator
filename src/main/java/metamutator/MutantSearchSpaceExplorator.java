@@ -1,11 +1,11 @@
 package metamutator;
 
 import java.io.File;
-import java.io.PrintStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
 
 import org.junit.internal.TextListener;
 import org.junit.runner.JUnitCore;
@@ -17,10 +17,40 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 import configuration.Config;
-import extension.ClasseBTest;
 
 
 public class MutantSearchSpaceExplorator {
+	
+	/*public static void runMetaProgramWith(String target) throws Exception {
+		runMetaProgramWith(target, "");
+	}
+	
+	public static void runMetaProgramWith(String target, String _package) throws Exception {
+		File file = new File(target);
+		
+		if (!file.exists()) {
+			throw new Exception("no such directory");
+		}
+		else if (file.isDirectory()) {
+			for (File sfile : file.listFiles()) {
+				if (sfile.isFile()) {
+					URL url = file.toURI().toURL();
+					URL[] urls = new URL[]{url};
+					ClassLoader cl = new URLClassLoader(urls);
+	
+					Class<?> clazz = cl.loadClass(_package+sfile.getName().replace(".java", ""));
+					runMetaProgramWith(clazz);
+				}
+				else if (sfile.isDirectory()) {
+					if (!_package.isEmpty())
+						runMetaProgramWith(target, _package+"."+sfile.getName());
+					else
+						runMetaProgramWith(target, sfile.getName());
+				}
+				
+			}
+		}
+	}*/
 
 	public static void runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
 
@@ -201,7 +231,7 @@ public class MutantSearchSpaceExplorator {
 		};
 	}
 
-	public static void main(String[] args) throws Exception {
-		runMetaProgramWith(ClasseBTest.class);
-	}
+	//public static void main(String[] args) throws Exception {
+	//	runMetaProgramWith("src/test/java");
+	//}
 }
