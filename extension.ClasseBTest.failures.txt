@@ -1,0 +1,7 @@
+[id:1,h:0,v:NOTNULL, id:2,h:0,v:EQ, id:3,h:0,v:EQ]
+[id:1,h:0,v:NOTNULL, id:2,h:0,v:LE, id:3,h:0,v:EQ]
+[id:1,h:0,v:NOTNULL, id:2,h:0,v:GE, id:3,h:0,v:EQ]
+[id:1,h:0,v:NOTNULL, id:2,h:0,v:GT, id:3,h:0,v:NE]
+[id:1,h:0,v:NOTNULL, id:2,h:0,v:NE, id:3,h:0,v:EQ]
+[id:1,h:0,v:NOTNULL, id:2,h:0,v:LT, id:3,h:0,v:EQ]
+[id:1,h:0,v:NULL, id:2,h:0,v:GT, id:3,h:0,v:EQ]

@@ -27,7 +27,7 @@ public class MutantSearchSpaceExplorator {
 		boolean debug = false;
 
 		JUnitCore core = new JUnitCore();
-		
+
 		//output folder
 		File fail = new File("fail");
 		fail.mkdirs();
@@ -58,18 +58,18 @@ public class MutantSearchSpaceExplorator {
 		// for (int[] options :
 		// permutations(selectors.stream().map(Selector::getOptionCount).collect(Collectors.toList())))
 		// {
-		
+
 		int nattempts=0;
-		
+
 		for (int sel = 0; sel < selectors.size(); sel++) {
-			
+
 			//int k=0;
 			System.out.println(selectors.get(sel).getOptionCount());
 			for (int k = 0; k < selectors.get(sel).getOptionCount(); k++) 
 			{
 				Config conf = Config.getInitInstance();
 
-			
+
 				int[] options = new int[selectors.size()];
 				// System.out.println(Arrays.toString(options));
 				for (int i = options.length - 1; i >= 0; i--) {
@@ -79,11 +79,16 @@ public class MutantSearchSpaceExplorator {
 					strOptions[i] = selectors.get(i)
 							.getChosenOptionDescription();
 					for(int o = 0; o < selectors.get(i).getOptionCount();o++ ){
-						
-					boolean value =(o == 0)?true:false;
-					
-					conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":true");
-					
+
+						boolean value =(o == 0)?true:false;
+						if(i == sel && o ==k){
+							conf.write(selectors.get(sel).getLocationClass().getName()+":"+selectors.get(sel).getId()+":"+selectors.get(sel).getOption()[k]+":true");
+						}else{
+							if(i == sel)
+								value = false;
+							
+							conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":"+value);
+						}
 					}
 				}
 				selectors.get(sel).choose(k);
@@ -98,10 +103,10 @@ public class MutantSearchSpaceExplorator {
 					successes.add("   Worked !!!  -> "
 							+ Arrays.toString(options) + " / "
 							+ Arrays.toString(strOptions));
-					
-			                // On essaye avec renameTo
+
+					// On essaye avec renameTo
 					File dest = new File("sucess/mutant"+sel+""+k+".txt");
-			                new File("config.txt").renameTo(dest);
+					new File("config.txt").renameTo(dest);
 				} else {
 					String txt = String
 							.format("%s / %s -> It has %s failures out of %s runs in %s ms",
@@ -116,7 +121,7 @@ public class MutantSearchSpaceExplorator {
 					failures2.put(result.getFailureCount(), txt);
 					System.out.println(result.getFailures().get(0).getException());
 					File dest = new File("fail/mutant"+sel+""+k+".txt");
-	                new File("config.txt").renameTo(dest);
+					new File("config.txt").renameTo(dest);
 				}
 			}
 
@@ -189,11 +194,11 @@ public class MutantSearchSpaceExplorator {
 			@Override
 			public void remove() {
 				// TODO Auto-generated method stub
-				
+
 			}
 		};
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		runMetaProgramWith(ClasseBTest.class);
 	}

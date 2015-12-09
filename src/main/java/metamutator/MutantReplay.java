@@ -40,7 +40,7 @@ public class MutantReplay {
 		File sucess = new File("sucess.replay");
 		sucess.mkdirs();
 
-		File[] mutants = new File("sucess").listFiles();
+		File[] mutants = new File("fail").listFiles();
 		
 		// we first run the test suite once to load all classes and their static
 		// fields
@@ -91,7 +91,7 @@ public class MutantReplay {
 					boolean value =(o == mapedConf.get(cle))?true:false;
 					System.out.println(o + " - "+mapedConf.get(cle));
 					
-					conf.write(	Selector.getSelectorByName(cle).getLocationClass().getName()+":"+Selector.getSelectorByName(cle).getId()+":"+Selector.getSelectorByName(cle).getOption()[o]+":true");
+					conf.write(	Selector.getSelectorByName(cle).getLocationClass().getName()+":"+Selector.getSelectorByName(cle).getId()+":"+Selector.getSelectorByName(cle).getOption()[o]+":"+value);
 					
 					}
 					sel ++;
