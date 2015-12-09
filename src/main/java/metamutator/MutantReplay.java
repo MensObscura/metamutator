@@ -27,11 +27,6 @@ public class MutantReplay {
 
 		boolean debug = false;
 
-		PrintStream outputFailures = new PrintStream(new File(
-				TEST_CLASS.getName() + ".failures.txt"));
-		PrintStream outputTraces = new PrintStream(new File(
-				TEST_CLASS.getName() + ".traces.txt"));
-
 		JUnitCore core = new JUnitCore();
 		
 		//output folder
@@ -40,7 +35,7 @@ public class MutantReplay {
 		File sucess = new File("sucess.replay");
 		sucess.mkdirs();
 
-		File[] mutants = new File("sucess").listFiles();
+		File[] mutants = new File("fail").listFiles();
 		
 		// we first run the test suite once to load all classes and their static
 		// fields
@@ -79,8 +74,7 @@ public class MutantReplay {
 				int[] options = new int[selectors.size()];
 				int sel = 0;
 				for (String cle : cles) {
-					System.out.println(mapedConf.get(cle));
-					System.out.println(cle);
+
 					Selector.getSelectorByName(cle).choose(mapedConf.get(cle));
 					Selector.getSelectorByName(cle).setStopTime(
 							System.currentTimeMillis() + 300000);
@@ -89,9 +83,8 @@ public class MutantReplay {
 					for(int o = 0; o < Selector.getSelectorByName(cle).getOptionCount();o++ ){
 						
 					boolean value =(o == mapedConf.get(cle))?true:false;
-					System.out.println(o + " - "+mapedConf.get(cle));
 					
-					conf.write(	Selector.getSelectorByName(cle).getLocationClass().getName()+":"+Selector.getSelectorByName(cle).getId()+":"+Selector.getSelectorByName(cle).getOption()[o]+":true");
+					conf.write(	Selector.getSelectorByName(cle).getLocationClass().getName()+":"+Selector.getSelectorByName(cle).getId()+":"+Selector.getSelectorByName(cle).getOption()[o]+":"+value);
 					
 					}
 					sel ++;
@@ -120,7 +113,7 @@ public class MutantReplay {
 									result.getRunCount(), result.getRunTime());
 					String txt_trace = String.format("%s",
 							Arrays.toString(strOptions));
-					outputFailures.println(txt_trace);
+					
 					failures.add(txt);
 					failures2.put(result.getFailureCount(), txt);
 					System.out.println(result.getFailures().get(0).getException());
@@ -152,8 +145,6 @@ public class MutantReplay {
 		// else
 		// successes.forEach(System.out::println);
 
-		outputFailures.flush();
-		outputTraces.flush();
 	}
 
 	/**

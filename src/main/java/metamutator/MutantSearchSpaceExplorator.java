@@ -82,7 +82,7 @@ public class MutantSearchSpaceExplorator {
 						
 					boolean value =(o == 0)?true:false;
 					
-					conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":true");
+					conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":"+value);
 					
 					}
 				}
