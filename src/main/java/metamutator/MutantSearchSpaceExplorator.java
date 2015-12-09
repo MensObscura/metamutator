@@ -79,6 +79,7 @@ public class MutantSearchSpaceExplorator {
 					strOptions[i] = selectors.get(i)
 							.getChosenOptionDescription();
 					for(int o = 0; o < selectors.get(i).getOptionCount();o++ ){
+<<<<<<< HEAD
 
 						boolean value =(o == 0)?true:false;
 						if(i == sel && o ==k){
@@ -89,6 +90,13 @@ public class MutantSearchSpaceExplorator {
 							
 							conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":"+value);
 						}
+=======
+						
+					boolean value =(o == 0)?true:false;
+					
+					conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":"+value);
+					
+>>>>>>> d532dc936a8890c63a774511d1cf8bfac70c2261
 					}
 				}
 				selectors.get(sel).choose(k);

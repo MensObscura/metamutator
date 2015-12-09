@@ -10,7 +10,7 @@ import metamutator.ChangetoNullVariableMetaMutator;
 import metamutator.BinaryOperatorMetaMutator;
 import spoon.Launcher;
 
-public class MutatorLauncher {
+public class InteractiveJunitRunner {
 	
 	public static void copy(File sourceLocation, File targetLocation) throws IOException {
 	    if (sourceLocation.isDirectory()) {
@@ -25,18 +25,18 @@ public class MutatorLauncher {
 	 * @throws Exception
 	 * 
 	 * paramètres pour lancer l'initialisation :
-	 * 		-mute <path du projet> <path des sources>
-	 * ex : -mute /home/jean-loup/M2/OPL/projetTest /src/main/java
+	 * 		-create <path du projet> <path des sources>
+	 * ex : -create /home/jean-loup/M2/OPL/projetTest /src/main/java
 	 * 
 	 *      **********************************************
 	 * 
 	 * paramètres pour lancer la modification du mutant :
-	 * 		-init <path des tests> <package du test>
-	 * ex : -init /home/jean-loup/M2/OPL/projetTestMutant/src/test/java
+	 * 		-mute <path des tests> <package du test>
+	 * ex : -mute /home/jean-loup/M2/OPL/projetTestMutant/src/test/java
 	 */
 	public static void main(String[] args) throws Exception {
 		
-		if (args.length == 3 && args[0].equals("-mute")) {
+		if (args.length == 3 && args[0].equals("-create")) {
 			
 			String projectdirectory = args[1];
 			String dest = args[2];
@@ -67,7 +67,7 @@ public class MutatorLauncher {
 			
 			
 		}
-		else if (args.length == 2 && args[0].equals("-init")) {
+		else if (args.length == 2 && args[0].equals("-mute")) {
 			
 			String testsdirectory = args[1];
 			
