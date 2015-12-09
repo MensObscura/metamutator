@@ -13,11 +13,8 @@ public class Foo {
 		return Foo.class==c;
 	}
 	
-	public boolean op4() {
+	public boolean op4(){
 		String medt = "Theobaldie";
-		Integer tot = 11;
-		Integer sot =  new Integer(1);
-		String tu = null;
-		return true;
+		return medt != null;
 	}
 }

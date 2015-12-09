@@ -21,7 +21,7 @@ import spoon.reflect.code.*;
 /**
  * inserts a mutation hotspot for each binary operator
  */
-public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtAssignment> {
+public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtElement>{
 
 	public static final String SELECTOR_CLASS = Selector.class.getName();
 	
@@ -40,11 +40,12 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtAssignm
 
 
 	@Override
-	public boolean isToBeProcessed(CtAssignment element) {
+	public boolean isToBeProcessed(CtElement element) {
 		// if (element.getParent(CtAnonymousExecutable.class)!=null) {
 		// System.out.println(element.getParent(CtAnonymousExecutable.class));
 		// }
-		
+		if(!(element instanceof CtRHSReceiver))
+			return false;
 		try {
 			getTopLevelClass(element);
 		} catch (NullPointerException e) {
@@ -56,14 +57,14 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtAssignm
 			return false;
 		}
 
-		return !element.getType().isPrimitive() 
+		return !((CtRHSReceiver)element).getAssignment().getType().isPrimitive() 
 				&& (element.getParent(CtAnonymousExecutable.class) == null);
 	}
 
-	public void process(CtAssignment assignment) {
+	public void process(CtElement assignment) {
 		
-		System.out.println(assignment.getAssignment().toString());
-		mutateOperator(assignment, REDUCED_COMPARISON_OPERATORS);
+		System.out.println(((CtRHSReceiver)assignment).getAssignment().toString());
+		mutateOperator(((CtRHSReceiver)assignment).getAssignment(), REDUCED_COMPARISON_OPERATORS);
 
 	}
 
@@ -81,7 +82,7 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtAssignm
 	 * @param expression
 	 * @param operators
 	 */
-	private void mutateOperator(final CtAssignment expression,
+	private void mutateOperator(final CtExpression expression,
 			EnumSet<STATE> operators) {
 
 		if (alreadyInHotsSpot(expression)
@@ -97,14 +98,15 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtAssignm
 
 		int thisIndex = ++index;
 		
-		String actualExpression = expression.getAssignment().toString();
+		String actualExpression = expression.toString();
 		String newExpression = String.format("(%s%s.is(\"NOTNULL\"))?"+actualExpression+":null",procName,thisIndex);
 
 		CtCodeSnippetExpression codeSnippet = getFactory().Core()
 				.createCodeSnippetExpression();
 		codeSnippet.setValue('(' + newExpression + ')');
 		
-		expression.setAssignment(codeSnippet);
+		expression.replace(codeSnippet);
+		expression.replace(expression);
 
 		addVariableToClass(expression, "NOTNULL", thisIndex, operators);
 
@@ -138,7 +140,7 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtAssignm
 		return parent instanceof CtClass && ((CtClass) parent).isTopLevel();
 	}
 
-	private void addVariableToClass(CtAssignment element,
+	private void addVariableToClass(CtExpression element,
 			String originalKind, int index,
 			EnumSet<STATE> operators) {
 
