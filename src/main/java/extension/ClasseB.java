@@ -6,7 +6,7 @@ public class ClasseB {
     }
 
     public java.lang.String s() {
-        java.lang.String toto = ((_li1.is("NOTNULL"))?"toto":null);
+        java.lang.String toto = ((_nv1.is("NOTNULL"))?"toto":null);
         return toto;
     }
 
@@ -28,6 +28,6 @@ public class ClasseB {
 
     private static final metamutator.Selector _bo3 = metamutator.Selector.of(3,new String[]{"EQ","NE"}).in(ClasseB.class).id("_bo3");
 
-    private static final metamutator.Selector _li1 = metamutator.Selector.of(1,new String[]{"NOTNULL","NULL"}).in(ClasseB.class).id("_li1");
+    private static final metamutator.Selector _nv1 = metamutator.Selector.of(1,new String[]{"NOTNULL","NULL"}).in(ClasseB.class).id("_nv1");
 }
 

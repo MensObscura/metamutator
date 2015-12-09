@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Sets;
 
-import configuration.Config;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.BinaryOperatorKind;
 import spoon.reflect.code.CtBinaryOperator;
@@ -29,9 +28,8 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 	public static final String SELECTOR_CLASS = Selector.class.getName();
 
-	//the place where we'll wrote the configuration.
-	public static Config conf = Config.getInstance();
 	private static final int procId = 1;
+	private static final String procName = "_bo";
 	private static int index = 0;
 
 	private static final EnumSet<BinaryOperatorKind> LOGICAL_OPERATORS = EnumSet
@@ -45,7 +43,6 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 	private Set<CtElement> hostSpots = Sets.newHashSet();
 
-	private String className ="";
 
 	@Override
 	public boolean isToBeProcessed(CtBinaryOperator<Boolean> element) {
@@ -80,12 +77,6 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 	public void process(CtBinaryOperator<Boolean> binaryOperator) {
 		BinaryOperatorKind kind = binaryOperator.getKind();
 
-		//on sauvegarde le nom de la class, et s'il change on le note dans les configs.
-		String currentClass =binaryOperator.getParent(CtClass.class).getSimpleName();
-		if(!(this.className.equals(currentClass))){
-			this.className =  currentClass;
-			conf.write(this.className);
-		}
 
 		if (LOGICAL_OPERATORS.contains(kind)) {
 			mutateOperator(binaryOperator, LOGICAL_OPERATORS);
@@ -146,7 +137,7 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 				.stream()
 				.map(kind -> {
 					expression.setKind(kind);
-					return String.format("(_bo%s.is(\"%s\") && (%s))",
+					return String.format("(%s%s.is(\"%s\") && (%s))",procName,
 							thisIndex, kind, expression);
 				}).collect(Collectors.joining(" || "));
 
@@ -197,11 +188,9 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 		CtTypeReference<Object> fieldType = getFactory().Type()
 				.createTypeParameterReference(SELECTOR_CLASS);
-		String selectorId = "_bo" + index;
+		String selectorId = procName + index;
 
 
-		//we add the new selector in the config file
-		conf.write(this.className+":"+selectorId);
 
 
 		CtCodeSnippetExpression<Object> codeSnippet = getFactory().Core()
@@ -217,14 +206,12 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 		// the original operator, always the first one
 		sb.append('"').append(originalKind).append('"');
-		conf.write(this.className+":"+selectorId+":"+originalKind+":true");
 		// the other alternatives
 		for (BinaryOperatorKind kind : operators) {
 			if (kind.toString().equals(originalKind)) {
 				continue;
 			}
 			sb.append(',').append('"').append(kind).append('"');
-			conf.write(this.className+":"+selectorId+":"+kind+":false");
 		}
 
 		sb.append("})");

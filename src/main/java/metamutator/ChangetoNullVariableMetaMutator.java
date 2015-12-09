@@ -5,10 +5,10 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import configuration.Config;
 import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.CtCodeSnippetExpression;
 import spoon.reflect.code.CtLiteral;
+import spoon.reflect.code.CtRHSReceiver;
 import spoon.reflect.declaration.CtAnonymousExecutable;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtConstructor;
@@ -17,19 +17,18 @@ import spoon.reflect.declaration.CtField;
 import spoon.reflect.declaration.CtType;
 import spoon.reflect.declaration.ModifierKind;
 import spoon.reflect.reference.CtTypeReference;
-
+import spoon.reflect.code.*;
 /**
  * inserts a mutation hotspot for each binary operator
  */
-public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral> {
+public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtAssignment> {
 
 	public static final String SELECTOR_CLASS = Selector.class.getName();
-
-	//the place where we'll wrote the configuration.
-	public static Config conf = Config.getInstance();
+	
 
 	private static int index = 0;
 	private static final int procId = 2;
+	private static final String procName = "_nv";
 	private enum STATE {
 		NULL, NOTNULL
 	};
@@ -39,13 +38,13 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral
 
 	private Set<CtElement> hostSpots = Sets.newHashSet();
 
-	private String className ="";
 
 	@Override
-	public boolean isToBeProcessed(CtLiteral element) {
+	public boolean isToBeProcessed(CtAssignment element) {
 		// if (element.getParent(CtAnonymousExecutable.class)!=null) {
 		// System.out.println(element.getParent(CtAnonymousExecutable.class));
 		// }
+		
 		try {
 			getTopLevelClass(element);
 		} catch (NullPointerException e) {
@@ -61,16 +60,10 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral
 				&& (element.getParent(CtAnonymousExecutable.class) == null);
 	}
 
-	public void process(CtLiteral binaryOperator) {
+	public void process(CtAssignment assignment) {
 		
-		//on sauvegarde le nom de la class, et s'il change on le note dans les configs.
-		String currentClass =binaryOperator.getParent(CtClass.class).getSimpleName();
-		if(!(this.className.equals(currentClass))){
-			this.className =  currentClass;
-			conf.write(this.className);
-		}
-		
-		mutateOperator(binaryOperator, REDUCED_COMPARISON_OPERATORS);
+		System.out.println(assignment.getAssignment().toString());
+		mutateOperator(assignment, REDUCED_COMPARISON_OPERATORS);
 
 	}
 
@@ -88,7 +81,7 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral
 	 * @param expression
 	 * @param operators
 	 */
-	private void mutateOperator(final CtLiteral expression,
+	private void mutateOperator(final CtAssignment expression,
 			EnumSet<STATE> operators) {
 
 		if (alreadyInHotsSpot(expression)
@@ -99,18 +92,20 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral
 							expression));
 			return;
 		}
+		
+		
 
 		int thisIndex = ++index;
 		
-		String actualExpression = expression.toString();
-		String newExpression = String.format("(_li%s.is(\"NOTNULL\"))?"+actualExpression+":null",thisIndex);
+		String actualExpression = expression.getAssignment().toString();
+		String newExpression = String.format("(%s%s.is(\"NOTNULL\"))?"+actualExpression+":null",procName,thisIndex);
 
-		CtCodeSnippetExpression<Boolean> codeSnippet = getFactory().Core()
+		CtCodeSnippetExpression codeSnippet = getFactory().Core()
 				.createCodeSnippetExpression();
 		codeSnippet.setValue('(' + newExpression + ')');
+		
+		expression.setAssignment(codeSnippet);
 
-		expression.replace(codeSnippet);
-		expression.replace(expression);
 		addVariableToClass(expression, "NOTNULL", thisIndex, operators);
 
 		hostSpots.add(expression);
@@ -143,7 +138,7 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral
 		return parent instanceof CtClass && ((CtClass) parent).isTopLevel();
 	}
 
-	private void addVariableToClass(CtLiteral element,
+	private void addVariableToClass(CtAssignment element,
 			String originalKind, int index,
 			EnumSet<STATE> operators) {
 
@@ -152,11 +147,7 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral
 
 		CtTypeReference<Object> fieldType = getFactory().Type()
 				.createTypeParameterReference(SELECTOR_CLASS);
-		String selectorId = "_li" + index;
-
-
-		//we add the new selector in the config file
-		conf.write(this.className+":"+selectorId);
+		String selectorId = procName + index;
 
 
 		CtCodeSnippetExpression<Object> codeSnippet = getFactory().Core()
@@ -172,14 +163,12 @@ public class ChangetoNullVariableMetaMutator extends AbstractProcessor<CtLiteral
 
 		// the original operator, always the first one
 		sb.append('"').append(originalKind).append('"');
-		conf.write(this.className+":"+selectorId+":"+originalKind+":true");
 		// the other alternatives
 		for (STATE kind : operators) {
 			if (kind.toString().equals(originalKind)) {
 				continue;
 			}
 			sb.append(',').append('"').append(kind).append('"');
-			conf.write(this.className+":"+selectorId+":"+kind+":false");
 		}
 
 		sb.append("})");
