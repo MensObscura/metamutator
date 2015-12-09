@@ -29,9 +29,9 @@ public class MutantSearchSpaceExplorator {
 		JUnitCore core = new JUnitCore();
 
 		//output folder
-		File fail = new File("fail");
+		File fail = new File("fail/"+TEST_CLASS.getName());
 		fail.mkdirs();
-		File success = new File("success");
+		File success = new File("success/"+TEST_CLASS.getName());
 		success.mkdirs();
 
 		// we first run the test suite once to load all classes and their static
@@ -107,7 +107,7 @@ public class MutantSearchSpaceExplorator {
 							+ Arrays.toString(strOptions));
 
 					// On essaye avec renameTo
-					File dest = new File("success/mutant"+sel+""+k+".txt");
+					File dest = new File(success.getPath()+"/mutant"+sel+""+k+".txt");
 					new File("config.txt").renameTo(dest);
 				} else {
 					String txt = String
@@ -122,7 +122,7 @@ public class MutantSearchSpaceExplorator {
 					failures.add(txt);
 					failures2.put(result.getFailureCount(), txt);
 					System.out.println(result.getFailures().get(0).getException());
-					File dest = new File("fail/mutant"+sel+""+k+".txt");
+					File dest = new File(fail.getPath()+"/mutant"+sel+""+k+".txt");
 					new File("config.txt").renameTo(dest);
 				}
 			}

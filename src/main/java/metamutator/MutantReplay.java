@@ -30,12 +30,19 @@ public class MutantReplay {
 		JUnitCore core = new JUnitCore();
 		
 		//output folder
-		File fail = new File("fail.replay");
+		File fail = new File("fail.replay/"+TEST_CLASS.getName());
 		fail.mkdirs();
-		File success = new File("success.replay");
+		File success = new File("success.replay/"+TEST_CLASS.getName());
 		success.mkdirs();
-
-		File[] mutants = new File("fail").listFiles();
+		
+		String path = "fail/"+TEST_CLASS.getName();
+		File source =new File(path);
+		File[] mutants ;
+		if(source.exists() && source.isDirectory()){
+		mutants= source.listFiles();}
+		else{
+			throw new Exception("The directory fail or success dosen't exist, or is not a directory, please execute MutantSearchSpaceExplorator.runMetaProgramWith(Class<?> TEST_CLASS) first.");
+		}
 		
 		// we first run the test suite once to load all classes and their static
 		// fields
