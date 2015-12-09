@@ -17,6 +17,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 import configuration.Config;
+import extension.ClasseBTest;
 
 
 public class MutantSearchSpaceExplorator {
@@ -24,11 +25,6 @@ public class MutantSearchSpaceExplorator {
 	public static void runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
 
 		boolean debug = false;
-
-		PrintStream outputFailures = new PrintStream(new File(
-				TEST_CLASS.getName() + ".failures.txt"));
-		PrintStream outputTraces = new PrintStream(new File(
-				TEST_CLASS.getName() + ".traces.txt"));
 
 		JUnitCore core = new JUnitCore();
 		
@@ -66,7 +62,6 @@ public class MutantSearchSpaceExplorator {
 		int nattempts=0;
 		
 		for (int sel = 0; sel < selectors.size(); sel++) {
-			outputTraces.println(selectors.get(sel).getIdentifier());
 			
 			//int k=0;
 			System.out.println(selectors.get(sel).getOptionCount());
@@ -116,7 +111,7 @@ public class MutantSearchSpaceExplorator {
 									result.getRunCount(), result.getRunTime());
 					String txt_trace = String.format("%s",
 							Arrays.toString(strOptions));
-					outputFailures.println(txt_trace);
+
 					failures.add(txt);
 					failures2.put(result.getFailureCount(), txt);
 					System.out.println(result.getFailures().get(0).getException());
@@ -148,8 +143,6 @@ public class MutantSearchSpaceExplorator {
 		// else
 		// successes.forEach(System.out::println);
 
-		outputFailures.flush();
-		outputTraces.flush();
 	}
 
 	/**
@@ -199,5 +192,9 @@ public class MutantSearchSpaceExplorator {
 				
 			}
 		};
+	}
+	
+	public static void main(String[] args) throws Exception {
+		runMetaProgramWith(ClasseBTest.class);
 	}
 }

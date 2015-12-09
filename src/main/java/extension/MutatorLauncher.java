@@ -25,18 +25,18 @@ public class MutatorLauncher {
 	 * @throws Exception
 	 * 
 	 * paramètres pour lancer l'initialisation :
-	 * 		-init <path du projet> <path des sources>
-	 * ex : -init /home/jean-loup/M2/OPL/projetTest /src/main/java
+	 * 		-mute <path du projet> <path des sources>
+	 * ex : -mute /home/jean-loup/M2/OPL/projetTest /src/main/java
 	 * 
 	 *      **********************************************
 	 * 
 	 * paramètres pour lancer la modification du mutant :
-	 * 		-test <path des tests> <package du test>
-	 * ex : -test /home/jean-loup/M2/OPL/projetTestMutant/src/test/java
+	 * 		-init <path des tests> <package du test>
+	 * ex : -init /home/jean-loup/M2/OPL/projetTestMutant/src/test/java
 	 */
 	public static void main(String[] args) throws Exception {
 		
-		if (args.length == 3 && args[0].equals("-init")) {
+		if (args.length == 3 && args[0].equals("-mute")) {
 			
 			String projectdirectory = args[1];
 			String dest = args[2];
@@ -67,7 +67,7 @@ public class MutatorLauncher {
 			
 			
 		}
-		else if (args.length == 2 && args[0].equals("-test")) {
+		else if (args.length == 2 && args[0].equals("-init")) {
 			
 			String testsdirectory = args[1];
 			

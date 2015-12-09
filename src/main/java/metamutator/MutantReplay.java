@@ -18,6 +18,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 import configuration.Config;
+import extension.ClasseBTest;
 
 
 public class MutantReplay {
@@ -70,22 +71,25 @@ public class MutantReplay {
 		
 		for(int mut = 0; mut < mutants.length;mut++ ){
 				Config conf = Config.getInitInstance();
-				Map<String,String> mapedConf = conf.getConfig(mutants[mut].getPath()).get(TEST_CLASS.getName());
+				System.out.println(TEST_CLASS.getName());
+				Map<String,Integer> mapedConf = conf.getConfig(mutants[mut].getPath()).get(selectors.get(0).getLocationClass().getName());
 			
 				Set<String> cles = mapedConf.keySet();
 				
 				int[] options = new int[selectors.size()];
 				int sel = 0;
 				for (String cle : cles) {
-					
-					Selector.getSelectorByName(cle).choose(Integer.parseInt(mapedConf.get(cle)));
+					System.out.println(mapedConf.get(cle));
+					System.out.println(cle);
+					Selector.getSelectorByName(cle).choose(mapedConf.get(cle));
 					Selector.getSelectorByName(cle).setStopTime(
 							System.currentTimeMillis() + 300000);
 					strOptions[sel] = Selector.getSelectorByName(cle)
 							.getChosenOptionDescription();
 					for(int o = 0; o < Selector.getSelectorByName(cle).getOptionCount();o++ ){
 						
-					boolean value =(o == Integer.parseInt(mapedConf.get(cle)))?true:false;
+					boolean value =(o == mapedConf.get(cle))?true:false;
+					System.out.println(o + " - "+mapedConf.get(cle));
 					
 					conf.write(	Selector.getSelectorByName(cle).getLocationClass().getName()+":"+Selector.getSelectorByName(cle).getId()+":"+Selector.getSelectorByName(cle).getOption()[o]+":true");
 					
@@ -199,5 +203,9 @@ public class MutantReplay {
 				
 			}
 		};
+	}
+	
+	public static void main(String[] args) throws Exception {
+		runMetaProgramWith(ClasseBTest.class);
 	}
 }
