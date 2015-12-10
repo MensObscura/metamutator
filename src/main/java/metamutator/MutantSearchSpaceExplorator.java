@@ -237,6 +237,6 @@ public class MutantSearchSpaceExplorator {
 	}
 
 	public static void main(String[] args) throws Exception {
-		runMetaProgramWith("target/classes/extension");
+		runMetaProgramWith("target/classes/temporaire2");
 	}
 }

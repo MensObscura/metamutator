@@ -68,7 +68,7 @@ public class Selector<E> {
 //		if (System.currentTimeMillis() > stopTime)
 //			throw new StopTimeExceededError("In selector " + hotSpot + " with option " + chosenVariant + " checking for " + variant);
 
-		return chosenVariant >= 0 && variants[chosenVariant].toString().equals(variant);
+		return chosenVariant >= 0 && variants[chosenVariant].equals(variant);
 	}
 
 	@Override public String toString() {

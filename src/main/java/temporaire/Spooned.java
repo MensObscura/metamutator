@@ -9,7 +9,7 @@ public class Spooned {
 
 	public static void main(String[] args) {
 		final String[] arguments = {
-				"-i", "src/test/java/foo",
+				"-i", "src/main/java/temporaire",
 				"-o", "/home/thibaud/M2/OPL/metamutator/spooned"
 		};
 
@@ -17,6 +17,7 @@ public class Spooned {
 		launcher.setArgs(arguments);
 
 		launcher.addProcessor(new BinaryOperatorMetaMutator());
+		launcher.addProcessor(new VariabletoNullMetaMutator());
 
 		launcher.run();
 	}

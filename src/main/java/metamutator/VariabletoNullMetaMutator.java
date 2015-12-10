@@ -17,6 +17,7 @@ import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtConstructor;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtField;
+import spoon.reflect.reference.CtTypeReference;
 
 /**
  * inserts a mutation hotspot for each binary operator
@@ -28,12 +29,8 @@ public class VariabletoNullMetaMutator extends
 	private static int index = 0;
 	private static final int procId = 2;
 	
-	public enum STATE {
-		NULL, NOTNULL
-	};
-
-	private static final EnumSet<STATE> NULLORNOTNULL = EnumSet
-			.of(STATE.NOTNULL, STATE.NULL);
+	private static final EnumSet<Null> NULLORNOTNULL = EnumSet
+			.of(Null.NO, Null.YES);
 
 	private Set<CtElement> hostSpots = Sets.newHashSet();
 
@@ -54,6 +51,11 @@ public class VariabletoNullMetaMutator extends
 				if (element.getParent(CtConstructor.class) != null) {
 					return false;
 				}
+				
+				CtTypeReference type = ((CtRHSReceiver)element).getAssignment().getType();
+				
+				if (type == null)
+					return false;
 
 				return !((CtRHSReceiver)element).getAssignment().getType().isPrimitive() 
 						&& (element.getParent(CtAnonymousExecutable.class) == null);
@@ -71,7 +73,7 @@ public class VariabletoNullMetaMutator extends
 	 * @param expression
 	 * @param operators
 	 */
-	private void mutateOperator(final CtExpression expression, EnumSet<STATE> operators) {
+	private void mutateOperator(final CtExpression expression, EnumSet<Null> operators) {
 		
 		if (alreadyInHotsSpot(expression)
 				|| expression.toString().contains(".is(\"")) {
@@ -87,7 +89,7 @@ public class VariabletoNullMetaMutator extends
 		int thisIndex = ++index;
 		
 		String actualExpression = expression.toString();
-		String newExpression = String.format("(%s%s.is(\"NOTNULL\"))?"+actualExpression+":null",PREFIX,thisIndex);
+		String newExpression = String.format("(%s%s.is(%s))?"+actualExpression+":null",PREFIX,thisIndex,"metamutator.Null.NO");
 
 		CtCodeSnippetExpression codeSnippet = getFactory().Core()
 				.createCodeSnippetExpression();
@@ -96,7 +98,7 @@ public class VariabletoNullMetaMutator extends
 		expression.replace(codeSnippet);
 		expression.replace(expression);
 		
-		Selector.generateSelector(expression, STATE.NOTNULL, thisIndex, procId, operators, PREFIX);
+		Selector.generateSelector(expression, Null.NO, thisIndex, procId, operators, PREFIX);
 
 		hostSpots.add(expression);
 

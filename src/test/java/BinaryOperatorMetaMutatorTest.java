@@ -21,8 +21,6 @@ public class BinaryOperatorMetaMutatorTest {
         l.addInputResource("src/test/java/foo");
         l.addProcessor(new BinaryOperatorMetaMutator());
         l.run();
-        /*
-        System.out.println(l);
 
         // now we get the code of Foo
         CtClass c = (CtClass) l.getFactory().Package().getRootPackage().getElements(new NameFilter("Foo")).get(0);
@@ -77,6 +75,6 @@ public class BinaryOperatorMetaMutatorTest {
         sel1.choose(3); // LT
         assertEquals(false, invokeExactMethod(o, "op2", new Object[] {3, 3}));
         assertEquals(true, invokeExactMethod(o, "op2", new Object[] {3, 4}));        
-       */ 
+       
     }
 }

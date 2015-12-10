@@ -1,5 +1,7 @@
 import static org.apache.commons.lang.reflect.MethodUtils.invokeExactMethod;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import metamutator.Selector;
@@ -40,20 +42,18 @@ public class VariabletoNullMetaMutatorTest {
         
         // test with the first
         Selector sel=Selector.getSelectorByName("_variableNullHotSpot1");
-                
-        System.out.println(sel.getChosenOptionDescription());
-        
+                        
         // the initial version normaly, don't affect anythings
-        assertEquals(true, invokeExactMethod(o, "op4", new Object[] {}));
+        assertNotNull(invokeExactMethod(o, "op4", new Object[] {}));
 
         // now we activate the first metamutation (we dont touch the affectation)
         sel.choose(0);
-        assertEquals(true, invokeExactMethod(o, "op4", new Object[] {}));
+        assertNotNull(invokeExactMethod(o, "op4", new Object[] {}));
         
         // now we activate the second metamutation (Null)
         // and the expected result is false
         sel.choose(1);
-        assertEquals(false, invokeExactMethod(o, "op4", new Object[] {}));
+        assertNull(invokeExactMethod(o, "op4", new Object[] {}));
         
         // impossible option
         try {
