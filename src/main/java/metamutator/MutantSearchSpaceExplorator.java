@@ -25,13 +25,15 @@ public class MutantSearchSpaceExplorator {
 	static URL[] urls;
 	static ClassLoader cl;
 	
-	public static void runMetaProgramWith(String target) throws Exception {
+	public static void runMetaProgramIn(String target) throws Exception {
 		
 		File file = new File(target);
 		
 		if (!file.exists()) {
 			throw new Exception("no such directory");
 		}
+		if ((file.isFile()))
+			throw new Exception("not a directory");
 		
 		url = file.toURI().toURL();
 		urls = new URL[]{url};
@@ -48,6 +50,7 @@ public class MutantSearchSpaceExplorator {
 		}
 		else if (target.isDirectory()) {
 			for (File file : target.listFiles()) {
+				System.out.println("******************"+file.getName()+"******************");
 				if (!_package.isEmpty())
 					runMetaProgramWith(file, _package+"."+target.getName());
 				else
@@ -237,6 +240,6 @@ public class MutantSearchSpaceExplorator {
 	}
 
 	public static void main(String[] args) throws Exception {
-		runMetaProgramWith("target/classes/temporaire2");
+		runMetaProgramIn("target/classes/temporaire2/");
 	}
 }
