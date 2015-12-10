@@ -16,6 +16,7 @@ import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtConstructor;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtField;
+import spoon.reflect.reference.CtTypeReference;
 
 /**
  * inserts a mutation hotspot for each binary operator
@@ -58,7 +59,7 @@ public class BinaryOperatorMetaMutator extends
 		if (element.getParent(CtField.class) != null) {
 			return false;
 		}
-
+		
 		return (LOGICAL_OPERATORS.contains(element.getKind()) || COMPARISON_OPERATORS
 				.contains(element.getKind()))
 				&& (element.getParent(CtAnonymousExecutable.class) == null) // not
@@ -86,6 +87,10 @@ public class BinaryOperatorMetaMutator extends
 	}
 
 	private boolean isNumber(CtExpression<?> operand) {
+				
+		if (operand.getType().toString().equals(CtTypeReference.NULL_TYPE_NAME))
+			return false;
+		
 		return operand.getType().getSimpleName().equals("int")
 			|| operand.getType().getSimpleName().equals("long")
 			|| operand.getType().getSimpleName().equals("byte")

@@ -14,8 +14,8 @@ public class Foo {
 		return Foo.class==c;
 	}
 	
-	public String op4(){
+	public boolean op4(){
 		String medt = "Theobaldie";
-		return medt;
+		return medt != null;
 	}
 }
