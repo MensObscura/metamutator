@@ -244,7 +244,7 @@ public class Config {
 			outputFile.println (mutant); 
 			outputFile.flush();
 			String value = (mutant.split(":"))[mutant.split(":").length - 1];
-			System.out.println("Inserting \""+mutant+"\" performed, default setting = "+value);
+			//System.out.println("Inserting \""+mutant+"\" performed, default setting = "+value);
 
 		}
 

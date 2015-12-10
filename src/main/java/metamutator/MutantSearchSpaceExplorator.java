@@ -21,36 +21,41 @@ import configuration.Config;
 
 public class MutantSearchSpaceExplorator {
 	
-	/*public static void runMetaProgramWith(String target) throws Exception {
-		runMetaProgramWith(target, "");
-	}
+	static URL url;
+	static URL[] urls;
+	static ClassLoader cl;
 	
-	public static void runMetaProgramWith(String target, String _package) throws Exception {
+	public static void runMetaProgramWith(String target) throws Exception {
+		
 		File file = new File(target);
 		
 		if (!file.exists()) {
 			throw new Exception("no such directory");
 		}
-		else if (file.isDirectory()) {
-			for (File sfile : file.listFiles()) {
-				if (sfile.isFile()) {
-					URL url = file.toURI().toURL();
-					URL[] urls = new URL[]{url};
-					ClassLoader cl = new URLClassLoader(urls);
+		
+		url = file.toURI().toURL();
+		urls = new URL[]{url};
+		cl = new URLClassLoader(urls);
+		
+		runMetaProgramWith(file, "");
+	}
 	
-					Class<?> clazz = cl.loadClass(_package+sfile.getName().replace(".java", ""));
-					runMetaProgramWith(clazz);
-				}
-				else if (sfile.isDirectory()) {
-					if (!_package.isEmpty())
-						runMetaProgramWith(target, _package+"."+sfile.getName());
-					else
-						runMetaProgramWith(target, sfile.getName());
-				}
-				
+	public static void runMetaProgramWith(File target, String _package) throws Exception {
+		
+		if (target.isFile()) {
+			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
+			runMetaProgramWith(clazz);
+		}
+		else if (target.isDirectory()) {
+			for (File file : target.listFiles()) {
+				if (!_package.isEmpty())
+					runMetaProgramWith(file, _package+"."+target.getName());
+				else
+					runMetaProgramWith(file, target.getName());
 			}
 		}
-	}*/
+				
+	}
 
 	public static void runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
 
@@ -231,7 +236,7 @@ public class MutantSearchSpaceExplorator {
 		};
 	}
 
-	//public static void main(String[] args) throws Exception {
-	//	runMetaProgramWith("src/test/java");
-	//}
+	public static void main(String[] args) throws Exception {
+		runMetaProgramWith("target/classes/extension");
+	}
 }
