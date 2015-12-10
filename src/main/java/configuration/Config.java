@@ -139,7 +139,7 @@ public class Config {
 
 			//Boucle de lecture du fichier
 			while ((line=inputFile.readLine())!=null){
-				System.out.println(line);
+				//System.out.println(line);
 				
 				//On envoie la ligne s'enregistrer vers la map
 				selOption = mapLine(line,selOption);

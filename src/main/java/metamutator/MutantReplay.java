@@ -2,6 +2,8 @@ package metamutator;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -18,11 +20,51 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 import configuration.Config;
+import temporaire2.ClasseBTest;
 
 
 public class MutantReplay {
+	
+	static URL url;
+	static URL[] urls;
+	static ClassLoader cl;
+	
+	public static void replayMetaProgramIn(String target) throws Exception {
+		
+		File file = new File(target);
+		
+		if (!file.exists()) {
+			throw new Exception("no such directory");
+		}
+		if ((file.isFile()))
+			throw new Exception("not a directory");
+		
+		url = file.toURI().toURL();
+		urls = new URL[]{url};
+		cl = new URLClassLoader(urls);
+		
+		replayMetaProgramWith(file, "");
+	}
+	
+	public static void replayMetaProgramWith(File target, String _package) throws Exception {
+		
+		if (target.isFile()) {
+			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
+			replayMetaProgramWith(clazz);
+		}
+		else if (target.isDirectory()) {
+			for (File file : target.listFiles()) {
+				System.out.println("******************"+file.getName()+"******************");
+				if (!_package.isEmpty())
+					replayMetaProgramWith(file, _package+"."+target.getName());
+				else
+					replayMetaProgramWith(file, target.getName());
+			}
+		}
+				
+	}
 
-	public static void runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
+	public static void replayMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
 
 		boolean debug = false;
 
@@ -203,6 +245,6 @@ public class MutantReplay {
 	}
 	
 	//public static void main(String[] args) throws Exception {
-	//	runMetaProgramWith(ClasseBTest.class);
+	//	replayMetaProgramIn("target/classes/temporaire2/");
 	//}
 }
