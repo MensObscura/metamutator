@@ -1,4 +1,4 @@
-package extension;
+package temporaire;
 
 import metamutator.BinaryOperatorMetaMutator;
 import metamutator.VariabletoNullMetaMutator;

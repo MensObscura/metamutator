@@ -1,9 +1,9 @@
-package extension;
+package temporaire2;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import configuration.ClasseB;
+import temporaire.ClasseB;
 
 public class ClasseBTest {
 	

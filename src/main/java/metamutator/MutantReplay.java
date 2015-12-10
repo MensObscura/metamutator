@@ -18,7 +18,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 import configuration.Config;
-import extension.ClasseBTest;
 
 
 public class MutantReplay {
@@ -203,7 +202,7 @@ public class MutantReplay {
 		};
 	}
 	
-	public static void main(String[] args) throws Exception {
-		runMetaProgramWith(ClasseBTest.class);
-	}
+	//public static void main(String[] args) throws Exception {
+	//	runMetaProgramWith(ClasseBTest.class);
+	//}
 }
