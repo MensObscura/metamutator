@@ -16,21 +16,16 @@ import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtConstructor;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtField;
-import spoon.reflect.declaration.CtType;
-import spoon.reflect.declaration.ModifierKind;
-import spoon.reflect.reference.CtTypeReference;
 
 /**
  * inserts a mutation hotspot for each binary operator
  */
 public class BinaryOperatorMetaMutator extends
-AbstractProcessor<CtBinaryOperator<Boolean>> {
+		AbstractProcessor<CtBinaryOperator<Boolean>> {
 
-	public static final String SELECTOR_CLASS = Selector.class.getName();
-
-	private static final int procId = 1;
-	private static final String procName = "_bo";
+	public static final String PREFIX =  "_binaryLogicalOperatorHotSpot";
 	private static int index = 0;
+	private static final int procId = 1;
 
 	private static final EnumSet<BinaryOperatorKind> LOGICAL_OPERATORS = EnumSet
 			.of(BinaryOperatorKind.AND, BinaryOperatorKind.OR);
@@ -43,14 +38,13 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 	private Set<CtElement> hostSpots = Sets.newHashSet();
 
-
 	@Override
 	public boolean isToBeProcessed(CtBinaryOperator<Boolean> element) {
 		// if (element.getParent(CtAnonymousExecutable.class)!=null) {
 		// System.out.println(element.getParent(CtAnonymousExecutable.class));
 		// }
 		try {
-			getTopLevelClass(element);
+			Selector.getTopLevelClass(element);
 		} catch (NullPointerException e) {
 			return false;
 		}
@@ -68,41 +62,40 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 		return (LOGICAL_OPERATORS.contains(element.getKind()) || COMPARISON_OPERATORS
 				.contains(element.getKind()))
 				&& (element.getParent(CtAnonymousExecutable.class) == null) // not
-				// in
-				// static
-				// block
-				;
+																			// in
+																			// static
+																			// block
+		;
 	}
 
 	public void process(CtBinaryOperator<Boolean> binaryOperator) {
 		BinaryOperatorKind kind = binaryOperator.getKind();
 
-
 		if (LOGICAL_OPERATORS.contains(kind)) {
 			mutateOperator(binaryOperator, LOGICAL_OPERATORS);
 		} else if (COMPARISON_OPERATORS.contains(kind)) {
 			if (isNumber(binaryOperator.getLeftHandOperand())
-					|| isNumber(binaryOperator.getRightHandOperand()))
+			 || isNumber(binaryOperator.getRightHandOperand()))
 			{
 				mutateOperator(binaryOperator, COMPARISON_OPERATORS);
 			}
-			else {
-				mutateOperator(binaryOperator, REDUCED_COMPARISON_OPERATORS);
-			}
+			 else {
+			 mutateOperator(binaryOperator, REDUCED_COMPARISON_OPERATORS);
+			 }
 		}
 	}
 
 	private boolean isNumber(CtExpression<?> operand) {
 		return operand.getType().getSimpleName().equals("int")
-				|| operand.getType().getSimpleName().equals("long")
-				|| operand.getType().getSimpleName().equals("byte")
-				|| operand.getType().getSimpleName().equals("char")
-				|| operand.getType().getSimpleName().equals("float")
-				|| operand.getType().getSimpleName().equals("double")
-				|| Number.class.isAssignableFrom(operand.getType().getActualClass());
+			|| operand.getType().getSimpleName().equals("long")
+			|| operand.getType().getSimpleName().equals("byte")
+			|| operand.getType().getSimpleName().equals("char")
+		|| operand.getType().getSimpleName().equals("float")
+		|| operand.getType().getSimpleName().equals("double")
+		|| Number.class.isAssignableFrom(operand.getType().getActualClass());
 	}
 
-	/**
+/**
 	 * Converts "a op b" bean op one of "<", "<=", "==", ">=", "!=" to:
 	 *    (  (op(1, 0, "<")  && (a < b))
 	 *    || (op(1, 1, "<=") && (a <= b))
@@ -115,8 +108,8 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 	 * @param expression
 	 * @param operators
 	 */
-	private void mutateOperator(final CtBinaryOperator<Boolean> expression,
-			EnumSet<BinaryOperatorKind> operators) {
+	private void mutateOperator(final CtBinaryOperator<Boolean> expression, EnumSet<BinaryOperatorKind> operators) {
+		
 		if (!operators.contains(expression.getKind())) {
 			throw new IllegalArgumentException("not consistent");
 		}
@@ -124,21 +117,21 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 		if (alreadyInHotsSpot(expression)
 				|| expression.toString().contains(".is(\"")) {
 			System.out
-			.println(String
-					.format("Expression '%s' ignored because it is included in previous hot spot",
-							expression));
+					.println(String
+							.format("Expression '%s' ignored because it is included in previous hot spot",
+									expression));
 			return;
 		}
 
 		int thisIndex = ++index;
 
-		String originalKind = expression.getKind().toString();
+		BinaryOperatorKind originalKind = expression.getKind();
 		String newExpression = operators
 				.stream()
 				.map(kind -> {
 					expression.setKind(kind);
-					return String.format("(%s%s.is(\"%s\") && (%s))",procName,
-							thisIndex, kind, expression);
+					return String.format("("+ PREFIX + "%s.is(%s) && (%s))",
+							thisIndex, kind.getDeclaringClass().getName()+"."+kind.name(), expression);
 				}).collect(Collectors.joining(" || "));
 
 		CtCodeSnippetExpression<Boolean> codeSnippet = getFactory().Core()
@@ -147,7 +140,7 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 		expression.replace(codeSnippet);
 		expression.replace(expression);
-		addVariableToClass(expression, originalKind, thisIndex, operators);
+		Selector.generateSelector(expression, originalKind, thisIndex, procId, operators, PREFIX);
 
 		hostSpots.add(expression);
 
@@ -177,73 +170,5 @@ AbstractProcessor<CtBinaryOperator<Boolean>> {
 
 	private boolean isTopLevel(CtElement parent) {
 		return parent instanceof CtClass && ((CtClass) parent).isTopLevel();
-	}
-
-	private void addVariableToClass(CtBinaryOperator element,
-			String originalKind, int index,
-			EnumSet<BinaryOperatorKind> operators) {
-
-		long hashCode = (element.getPosition().toString() + element.getParent()
-		.toString()).hashCode();
-
-		CtTypeReference<Object> fieldType = getFactory().Type()
-				.createTypeParameterReference(SELECTOR_CLASS);
-		String selectorId = procName + index;
-
-
-
-
-		CtCodeSnippetExpression<Object> codeSnippet = getFactory().Core()
-				.createCodeSnippetExpression();
-
-		StringBuilder sb = new StringBuilder(SELECTOR_CLASS + ".of(")
-				.append(procId+""+index);
-		
-		sb.append(',');
-
-		// now the options
-		sb.append("new String[]{");
-
-		// the original operator, always the first one
-		sb.append('"').append(originalKind).append('"');
-		// the other alternatives
-		for (BinaryOperatorKind kind : operators) {
-			if (kind.toString().equals(originalKind)) {
-				continue;
-			}
-			sb.append(',').append('"').append(kind).append('"');
-		}
-
-		sb.append("})");
-
-		// adding location
-		if (element.getParent(CtType.class).isTopLevel()) {
-			sb.append(".in("
-					+ element.getParent(CtType.class).getQualifiedName()
-					+ ".class)");
-		}
-
-		// adding identifier
-		sb.append(".id(\"" + selectorId + "\")");
-
-		codeSnippet.setValue(sb.toString());
-
-		CtClass<?> type = getTopLevelClass(element);
-
-		CtField<Object> field = getFactory().Field().create(
-				type,
-				EnumSet.of(ModifierKind.FINAL, ModifierKind.PRIVATE,
-						ModifierKind.STATIC), fieldType, selectorId,
-				codeSnippet);
-
-		type.addField(field);
-	}
-
-	private CtClass<?> getTopLevelClass(CtElement element) {
-		CtClass parent = element.getParent(CtClass.class);
-		while (!parent.isTopLevel()) {
-			parent = parent.getParent(CtClass.class);
-		}
-		return parent;
 	}
 }

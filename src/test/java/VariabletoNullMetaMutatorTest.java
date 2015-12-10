@@ -2,9 +2,8 @@ import static org.apache.commons.lang.reflect.MethodUtils.invokeExactMethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import metamutator.BinaryOperatorMetaMutator;
-import metamutator.ChangetoNullVariableMetaMutator;
 import metamutator.Selector;
+import metamutator.VariabletoNullMetaMutator;
 
 import org.junit.Test;
 
@@ -13,14 +12,14 @@ import spoon.reflect.declaration.CtClass;
 import spoon.reflect.visitor.filter.NameFilter;
 import bsh.Interpreter;
 
-public class ChangetoNullMetaMutatorTest {
+public class VariabletoNullMetaMutatorTest {
 
     @Test
-    public void testBinaryOperatorMetaMutator() throws Exception {
+    public void testChangetoNullMetaMutator() throws Exception {
         // build the model and apply the transformation
         Launcher l = new Launcher();
         l.addInputResource("src/test/java/foo");
-        l.addProcessor(new ChangetoNullVariableMetaMutator());
+        l.addProcessor(new VariabletoNullMetaMutator());
         l.run();
         // now we get the code of Foo
         CtClass c = (CtClass) l.getFactory().Package().getRootPackage().getElements(new NameFilter("Foo")).get(0);
@@ -40,7 +39,9 @@ public class ChangetoNullMetaMutatorTest {
         assertEquals(1,Selector.getAllSelectors().size());
         
         // test with the first
-        Selector sel=Selector.getSelectorByName("_nv1");
+        Selector sel=Selector.getSelectorByName("_variableNullHotSpot1");
+                
+        System.out.println(sel.getChosenOptionDescription());
         
         // the initial version normaly, don't affect anythings
         assertEquals(true, invokeExactMethod(o, "op4", new Object[] {}));

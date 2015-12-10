@@ -1,30 +1,39 @@
 package metamutator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import spoon.reflect.code.CtCodeSnippetExpression;
+import spoon.reflect.declaration.CtClass;
+import spoon.reflect.declaration.CtElement;
+import spoon.reflect.declaration.CtField;
+import spoon.reflect.declaration.CtType;
+import spoon.reflect.declaration.ModifierKind;
+
+import spoon.reflect.reference.CtTypeReference;
+
 /**
  * A selector selects one of the variants for a given hot spot
  */
-public class Selector {
+public class Selector<E> {
 	private static final Map<Long, Selector> selectors = new HashMap<Long, Selector>();
 
 	private long hotSpot;
 	private long locationHashCode;
 	private String identifier;
 	private Class locationClass;
-	private String[] variants;
+	private E[] variants;
 	private int chosenVariant = 0; 
 	private long stopTime;
 
 	private Selector() {
 	}
 
-	public static Selector of(long hotSpot, String ... variants) {
+	public static <E> Selector of(long hotSpot, E ... variants) {
 		// defensive copy
 		Selector selector = new Selector();
 		selector.hotSpot = hotSpot;
@@ -32,7 +41,7 @@ public class Selector {
 		// defensive copy
 		selector.variants = variants.clone();
 		//selector.locationHashCode = locationHashCode;
-		
+
 		selectors.put(hotSpot, selector);
 
 		return selector;
@@ -47,10 +56,6 @@ public class Selector {
 		this.identifier= identifier;
 		return this;
 	}
-	
-	public String getId() {
-		return this.identifier;
-	}
 
 	public void choose(int option) {
 		if (option<0 || option>=variants.length) {
@@ -59,11 +64,11 @@ public class Selector {
 		chosenVariant = option;
 	}
 
-	public boolean is(String variant) {
+	public boolean is(E variant) {
 //		if (System.currentTimeMillis() > stopTime)
 //			throw new StopTimeExceededError("In selector " + hotSpot + " with option " + chosenVariant + " checking for " + variant);
 
-		return chosenVariant >= 0 && variants[chosenVariant].equals(variant);
+		return chosenVariant >= 0 && variants[chosenVariant].toString().equals(variant);
 	}
 
 	@Override public String toString() {
@@ -90,10 +95,6 @@ public class Selector {
 		return variants.length;
 	}
 
-	public String[] getOption() {
-		return variants;
-	}
-	
 	public void setStopTime(long stopTime) {
 
 		this.stopTime = stopTime;
@@ -103,10 +104,6 @@ public class Selector {
 		return "id:"+hotSpot+",h:"+locationHashCode;
 	}
 
-	public Class getLocationClass(){
-		
-		return locationClass;
-	}
 	public String getChosenOptionDescription() {
 
 		return getIdentifier()+",v:"+variants[chosenVariant];
@@ -122,5 +119,88 @@ public class Selector {
 		public StopTimeExceededError(String message) {
 			super(message);
 		}
+	}
+	/** Generates a field containing a new selector for this element and adds it to the current class 
+	 * 
+	 */
+	public static <E> void generateSelector(CtElement element, E initialChoice, int selectorId, int procId, EnumSet<?> possibleChoices, String prefix ) {
+		
+		Class<?> choiceClass = possibleChoices.iterator().next().getClass();
+		
+		long hashCode = (element.getPosition().toString() + element.getParent()
+		.toString()).hashCode();
+
+		CtTypeReference<Object> fieldType = element.getFactory().Type().createTypeParameterReference(Selector.class.getCanonicalName());
+		
+		//doesn't work with spoon for the moment
+		//CtTypeReference<Object> genericRefs = element.getFactory().Type().createTypeParameterReference(choiceClass.getCanonicalName());
+		//fieldType.addActualTypeArgument(genericRefs);
+		
+		String selectorFieldName = prefix + selectorId;
+		
+		CtCodeSnippetExpression<Object> codeSnippet = element.getFactory().Core()
+				.createCodeSnippetExpression();
+		StringBuilder sb = new StringBuilder(Selector.class.getCanonicalName() + ".of(")
+				.append(procId+""+selectorId);
+		
+		sb.append(',');
+
+		// now the options
+		sb.append("new "+choiceClass.getCanonicalName()+"[]{");
+		
+		// the original operator, always the first one
+		sb.append(initialChoice.getClass().getCanonicalName()+"."+initialChoice.toString());
+		
+		// the other alternatives
+		for (Object choose : possibleChoices) {
+			if (choose.equals(initialChoice)) {
+				continue;
+			}
+			sb.append(',').append(choose.getClass().getCanonicalName()+"."+choose.toString());
+		}
+		
+		sb.append("})");
+		
+		// adding location
+		if (element.getParent(CtType.class).isTopLevel()) {
+			sb.append(".in("
+					+ element.getParent(CtType.class).getQualifiedName()
+					+ ".class)");
+		}
+		
+		// adding identifier
+		sb.append(".id(\"" + selectorFieldName + "\")");
+		
+		codeSnippet.setValue(sb.toString());
+		
+		CtClass<?> type = getTopLevelClass(element);
+		
+		CtField<Object> field = element.getFactory().Field().create(
+				type,
+				EnumSet.of(ModifierKind.FINAL, ModifierKind.PRIVATE,
+						ModifierKind.STATIC), fieldType, selectorFieldName,
+				codeSnippet);
+		
+		type.addField(field);
+	}
+	
+	public static CtClass<?> getTopLevelClass(CtElement element) {
+		CtClass parent = element.getParent(CtClass.class);
+		while (!parent.isTopLevel()) {
+			parent = parent.getParent(CtClass.class);
+		}
+		return parent;
+	}
+	
+	public Class getLocationClass(){
+		return locationClass;
+	}
+	
+	public String getId() {
+		return this.identifier;
+	}
+	
+	public E[] getOption() {
+		return variants;
 	}
 }

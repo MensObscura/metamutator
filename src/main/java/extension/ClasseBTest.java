@@ -3,6 +3,8 @@ package extension;
 import org.junit.Assert;
 import org.junit.Test;
 
+import configuration.ClasseB;
+
 public class ClasseBTest {
 	
 	static ClasseB foo = new ClasseB();

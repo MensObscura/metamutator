@@ -1,4 +1,4 @@
-package extension;
+package configuration;
 
 
 public class ClasseB {
