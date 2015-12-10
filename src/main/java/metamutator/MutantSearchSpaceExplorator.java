@@ -29,25 +29,30 @@ public class MutantSearchSpaceExplorator {
 		
 		File file = new File(target);
 		
+		// this function doesn't work for a file and for inexistant file
 		if (!file.exists()) {
 			throw new Exception("no such directory");
 		}
 		if ((file.isFile()))
 			throw new Exception("not a directory");
 		
+		// make urls for classloader
 		url = file.toURI().toURL();
 		urls = new URL[]{url};
+		// create classloader
 		cl = new URLClassLoader(urls);
 		
+		// finally run program
 		runMetaProgramWith(file, "");
 	}
 	
 	public static void runMetaProgramWith(File target, String _package) throws Exception {
-		
+		// if the target is a file, so load the class and apply the initial function
 		if (target.isFile()) {
 			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
 			runMetaProgramWith(clazz);
 		}
+		// if the target is a directory, do stuff for each under file
 		else if (target.isDirectory()) {
 			for (File file : target.listFiles()) {
 				System.out.println("******************"+file.getName()+"******************");

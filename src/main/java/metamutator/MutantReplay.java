@@ -1,7 +1,6 @@
 package metamutator;
 
 import java.io.File;
-import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
@@ -20,7 +19,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
 import configuration.Config;
-import temporaire2.ClasseBTest;
 
 
 public class MutantReplay {
@@ -33,25 +31,30 @@ public class MutantReplay {
 		
 		File file = new File(target);
 		
+		// this function doesn't work for a file and for inexistant file
 		if (!file.exists()) {
 			throw new Exception("no such directory");
 		}
 		if ((file.isFile()))
 			throw new Exception("not a directory");
 		
+		// make urls for classloader
 		url = file.toURI().toURL();
 		urls = new URL[]{url};
+		// create classloader
 		cl = new URLClassLoader(urls);
 		
+		// finally run program
 		replayMetaProgramWith(file, "");
 	}
 	
 	public static void replayMetaProgramWith(File target, String _package) throws Exception {
-		
+		// if the target is a file, so load the class and apply the initial function
 		if (target.isFile()) {
 			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
 			replayMetaProgramWith(clazz);
 		}
+		// if the target is a directory, do stuff for each under file
 		else if (target.isDirectory()) {
 			for (File file : target.listFiles()) {
 				System.out.println("******************"+file.getName()+"******************");
