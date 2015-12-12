@@ -81,6 +81,10 @@ public class Selector<E> {
 	public static List<Selector> getAllSelectors() {
 		return new ArrayList<Selector>(selectors.values());
 	}
+	
+	public static void reset() {
+		selectors.clear();
+	}
 
 	public static Selector getSelectorByName(String name) {
 		for (Selector s : selectors.values()) {

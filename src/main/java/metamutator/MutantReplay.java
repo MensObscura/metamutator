@@ -51,13 +51,16 @@ public class MutantReplay {
 	public static void replayMetaProgramWith(File target, String _package) throws Exception {
 		// if the target is a file, so load the class and apply the initial function
 		if (target.isFile()) {
+			System.out.println("******************"+target.getName()+"******************");
 			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
 			replayMetaProgramWith(clazz);
+			
+			Selector.reset();
+			
 		}
 		// if the target is a directory, do stuff for each under file
 		else if (target.isDirectory()) {
 			for (File file : target.listFiles()) {
-				System.out.println("******************"+file.getName()+"******************");
 				if (!_package.isEmpty())
 					replayMetaProgramWith(file, _package+"."+target.getName());
 				else
@@ -97,6 +100,8 @@ public class MutantReplay {
 		if (debug) { core.addListener(new TextListener(System.out)); }
 
 		List<Selector> selectors = Selector.getAllSelectors();
+		
+		System.out.println(selectors);
 
 		// if (selectors.isEmpty())
 		// // There's no hot spot in program. Add one to run it at least once
@@ -246,7 +251,7 @@ public class MutantReplay {
 		};
 	}
 	
-	//public static void main(String[] args) throws Exception {
-	//	replayMetaProgramIn("target/classes/temporaire2/");
-	//}
+	public static void main(String[] args) throws Exception {
+		replayMetaProgramIn("target/classes/temporaire2/");
+	}
 }

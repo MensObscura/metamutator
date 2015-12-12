@@ -18,7 +18,6 @@ import com.google.common.collect.Multimaps;
 
 import configuration.Config;
 
-import search_replay_src.*;
 public class MutantSearchSpaceExplorator {
 	
 	static URL url;
@@ -47,15 +46,19 @@ public class MutantSearchSpaceExplorator {
 	}
 	
 	public static void runMetaProgramWith(File target, String _package) throws Exception {
+
 		// if the target is a file, so load the class and apply the initial function
 		if (target.isFile()) {
+			System.out.println("******************"+target.getName()+"******************");
 			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
 			runMetaProgramWith(clazz);
+						
+			Selector.reset();
+			
 		}
 		// if the target is a directory, do stuff for each under file
 		else if (target.isDirectory()) {
 			for (File file : target.listFiles()) {
-				System.out.println("******************"+file.getName()+"******************");
 				if (!_package.isEmpty())
 					runMetaProgramWith(file, _package+"."+target.getName());
 				else
@@ -63,7 +66,7 @@ public class MutantSearchSpaceExplorator {
 			}
 			
 		}
-				System.out.println(Selector.getAllSelectors().size());
+
 	}
 
 	public static void runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
@@ -245,7 +248,7 @@ public class MutantSearchSpaceExplorator {
 		};
 	}
 
-//	public static void main(String[] args) throws Exception {
-//		runMetaProgramIn("target/classes/temporaire2/");
-//	}
+	public static void main(String[] args) throws Exception {
+		runMetaProgramIn("target/classes/temporaire2/");
+	}
 }
