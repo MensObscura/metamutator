@@ -27,6 +27,9 @@ public class MutantReplay {
 	static URL[] urls;
 	static ClassLoader cl;
 	
+	static int failures;
+	static int successes;
+	
 	public static void replayMetaProgramIn(String target) throws Exception {
 		
 		File file = new File(target);
@@ -38,6 +41,9 @@ public class MutantReplay {
 		if ((file.isFile()))
 			throw new Exception("not a directory");
 		
+		failures = 0;
+		successes = 0;
+		
 		// make urls for classloader
 		url = file.toURI().toURL();
 		urls = new URL[]{url};
@@ -46,13 +52,21 @@ public class MutantReplay {
 		
 		// finally run program
 		replayMetaProgramWith(file, "");
+		
+		System.out.println("******************"+file.getName()+"******************");
+		System.out.println("total killed "+failures);
+		System.out.println("total alive "+successes);
 	}
 	
 	public static void replayMetaProgramWith(File target, String _package) throws Exception {
 		// if the target is a file, so load the class and apply the initial function
 		if (target.isFile()) {
 			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
-			replayMetaProgramWith(clazz);
+			
+			int[] val = replayMetaProgramWith(clazz);
+			
+			failures += val[0];
+			successes += val[1];
 						
 		}
 		// if the target is a directory, do stuff for each under file
@@ -67,7 +81,7 @@ public class MutantReplay {
 				
 	}
 
-	public static void replayMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
+	public static int[] replayMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
 		System.out.println("******************"+TEST_CLASS.getName()+"******************");
 
 		boolean debug = false;
@@ -179,6 +193,10 @@ public class MutantReplay {
 		System.out.println("killed "+failures.size());
 		System.out.println("alive "+successes.size());
 		Selector.reset();
+		
+		int[] val = {failures.size(),successes.size()};
+		
+		return val;
 		
 		// Show result summary
 		// Sets.newHashSet(failures2.keys()).forEach(k -> {

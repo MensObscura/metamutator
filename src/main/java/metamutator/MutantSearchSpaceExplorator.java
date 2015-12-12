@@ -24,6 +24,9 @@ public class MutantSearchSpaceExplorator {
 	static URL[] urls;
 	static ClassLoader cl;
 	
+	static int failures;
+	static int successes;
+	
 	public static void runMetaProgramIn(String target) throws Exception {
 		
 		File file = new File(target);
@@ -35,6 +38,9 @@ public class MutantSearchSpaceExplorator {
 		if ((file.isFile()))
 			throw new Exception("not a directory");
 		
+		failures = 0;
+		successes = 0;
+		
 		// make urls for classloader
 		url = file.toURI().toURL();
 		urls = new URL[]{url};
@@ -43,6 +49,10 @@ public class MutantSearchSpaceExplorator {
 		
 		// finally run program
 		runMetaProgramWith(file, "");
+		
+		System.out.println("******************"+file.getName()+"******************");
+		System.out.println("total killed "+failures);
+		System.out.println("total alive "+successes);
 	}
 	
 	public static void runMetaProgramWith(File target, String _package) throws Exception {
@@ -51,7 +61,9 @@ public class MutantSearchSpaceExplorator {
 		if (target.isFile()) {
 			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
 			
-			runMetaProgramWith(clazz);
+			int[] val = runMetaProgramWith(clazz);
+			failures += val[0];
+			successes += val[1];
 			
 		}
 		// if the target is a directory, do stuff for each under file
@@ -67,7 +79,7 @@ public class MutantSearchSpaceExplorator {
 
 	}
 
-	public static void runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
+	public static int[] runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
 		System.out.println("******************"+TEST_CLASS.getName()+"******************");
 		boolean debug = false;
 
@@ -177,6 +189,10 @@ public class MutantSearchSpaceExplorator {
 		System.out.println("killed "+failures.size());
 		System.out.println("alive "+successes.size());
 		Selector.reset();
+		
+		int[] val = {failures.size(),successes.size()};
+		
+		return val;
 		
 		// Show result summary
 		// Sets.newHashSet(failures2.keys()).forEach(k -> {
