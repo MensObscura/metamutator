@@ -183,7 +183,7 @@ public class Config {
 		}
 
 		//if we found the arg ture off one option for a selector, we put it on the map
-		if(tabSelector.length == 4 && tabSelector[3].equals("true")){
+		if(tabSelector.length == 4 && tabSelector[3].equals("true") && selOption > -1){
 			config.get(tabSelector[0]).put(tabSelector[1], selOption);
 			selOption = -1;
 		
