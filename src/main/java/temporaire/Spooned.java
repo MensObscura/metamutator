@@ -9,7 +9,7 @@ public class Spooned {
 
 	public static void main(String[] args) {
 		final String[] arguments = {
-				"-i", "src/main/java/temporaire",
+				"-i", "src/test/java/",
 				"-o", "/home/thibaud/M2/OPL/metamutator/spooned"
 		};
 

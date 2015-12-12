@@ -46,14 +46,12 @@ public class MutantSearchSpaceExplorator {
 	}
 	
 	public static void runMetaProgramWith(File target, String _package) throws Exception {
-
+		
 		// if the target is a file, so load the class and apply the initial function
 		if (target.isFile()) {
-			System.out.println("******************"+target.getName()+"******************");
 			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
+			
 			runMetaProgramWith(clazz);
-						
-			Selector.reset();
 			
 		}
 		// if the target is a directory, do stuff for each under file
@@ -70,7 +68,7 @@ public class MutantSearchSpaceExplorator {
 	}
 
 	public static void runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
-
+		System.out.println("******************"+TEST_CLASS.getName()+"******************");
 		boolean debug = false;
 
 		JUnitCore core = new JUnitCore();
@@ -178,6 +176,8 @@ public class MutantSearchSpaceExplorator {
 
 		System.out.println("killed "+failures.size());
 		System.out.println("alive "+successes.size());
+		Selector.reset();
+		
 		// Show result summary
 		// Sets.newHashSet(failures2.keys()).forEach(k -> {
 		// System.out.println(String.format("\n-- Cases with %s", k));

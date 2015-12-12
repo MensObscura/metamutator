@@ -1,3 +1,4 @@
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -5,10 +6,8 @@ import java.io.File;
 
 import org.junit.Test;
 
-import metamutator.BinaryOperatorMetaMutator;
+import footest.FooTest;
 import metamutator.MutantReplay;
-import metamutator.VariabletoNullMetaMutator;
-import spoon.Launcher;
 
 public class MutantReplayTest {
 	
@@ -16,67 +15,65 @@ public class MutantReplayTest {
 	 * Here we test one class in the replay mutant and check if the result is good
 	 * @throws Exception
 	 */
+	
+	
 	  @Test
 	  public void TestMutantReplayFile() throws Exception{
-			File f;
-			File s ;
 		
 			
-			MutantReplay.replayMetaProgramWith(search_replay_test.SearchReplayTestClass.class);
+		MutantReplay.replayMetaProgramWith(FooTest.class);
 			
-			//Then we check the if the wanted file are created.
-			f = new File("results/fail.replay/search_replay_test.SearchReplayTestClass");
-			s = new File("results/success.replay/search_replay_test.SearchReplayTestClass");
-			assertTrue(f.exists());
-			assertTrue(s.exists());
-			File fm01 = new File("results/fail.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op2.txt");
-			File fm11 = new File("results/fail.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op3.txt");
-			File fm12 = new File("results/fail.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op4.txt");
-			File fm13 = new File("results/fail.replay/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op2.txt");
-			
-			File fm00 = new File("results/fail.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op1.txt");
-			File fm10 = new File("results/fail.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op5.txt");
-			File fm14 = new File("results/fail.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op6.txt");
-			File fm15 = new File("results/fail.replay/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op1.txt");
-			
-			File sm01 = new File("results/success.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op2.txt");
-			File sm11 = new File("results/success.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op3.txt");
-			File sm12 = new File("results/success.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op4.txt");
-			File sm13 = new File("results/success.replay/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op2.txt");
+		File f = new File("results/fail.replay/footest.FooTest");
+		File s = new File("results/success.replay/footest.FooTest");
 
 
-			
-			File sm00 = new File("results/success.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op1.txt");
-			File sm10 = new File("results/success.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op5.txt");
-			File sm14 = new File("results/success.replay/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op6.txt");
-			File sm15 = new File("results/success.replay/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op1.txt");
+		//Then we check the if the wanted file are created.
+		
+		assertTrue(f.exists());
+		assertTrue(s.exists());
+		
+		File fm01 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot1_Op1.txt");
+		File fm02 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot1_Op2.txt");
 
-			assertTrue(fm01.exists());
-			assertTrue(fm11.exists());
-			assertTrue(fm12.exists());
-			assertTrue(fm13.exists());
-			
-			assertFalse(fm00.exists());
-			assertFalse(fm10.exists());
-			assertFalse(fm14.exists());
-			assertFalse(fm15.exists());
+		File fm03 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op1.txt");
+		File fm04 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op2.txt");
+		File fm05 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op3.txt");
+		File fm06 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op4.txt");
+		File fm07 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op5.txt");
+		File fm08 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op6.txt");
+		
+		File fm09 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot3_Op1.txt");
+		File fm10 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot3_Op2.txt");
+		
+		File fm11 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot4_Op1.txt");
+		File fm12 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot4_Op2.txt");
+		
+		File fm13 = new File("results/fail.replay/footest.FooTest/mutant_variableNullHotSpot1_Op1.txt");
+		File fm14 = new File("results/fail.replay/footest.FooTest/mutant_variableNullHotSpot1_Op2.txt");
+				
 
-			
-			
-			assertFalse(sm01.exists());
-			assertFalse(sm11.exists());
-			assertFalse(sm12.exists());
-			assertFalse(sm13.exists());
+		assertEquals(14,f.listFiles().length);
+		assertEquals(0,s.listFiles().length);
 
-			
-			assertFalse(sm00.exists());
-			assertFalse(sm10.exists());
-			assertFalse(sm14.exists());
-			assertFalse(sm15.exists());
+		assertTrue(fm01.exists());
+		assertTrue(fm02.exists());
+		assertTrue(fm03.exists());
+		assertTrue(fm04.exists());
+		assertTrue(fm05.exists());
+		assertTrue(fm06.exists());
+		assertTrue(fm07.exists());
+		assertTrue(fm08.exists());
+		assertTrue(fm09.exists());
+		assertTrue(fm10.exists());
+		assertTrue(fm11.exists());
+		assertTrue(fm12.exists());
+		assertTrue(fm13.exists());
+		assertTrue(fm14.exists());
 			
 
 	  }
 	  
+	  	  
 	  @Test
 	  public void TestMutantReplayDir() throws Exception{
 			File f;
@@ -87,6 +84,7 @@ public class MutantReplayTest {
 
 		
 			MutantReplay.replayMetaProgramIn("target/test-classes/search_replay_test");
+			
 			f = new File("results/fail.replay/search_replay_test.SearchReplayTestClass");
 			s = new File("results/success.replay/search_replay_test.SearchReplayTestClass");
 			fb = new File("results/fail.replay/search_replay_test.SearchReplayTestClassBis");
@@ -190,6 +188,5 @@ public class MutantReplayTest {
 
 
 	  }
-
 
 }

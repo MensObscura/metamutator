@@ -51,7 +51,6 @@ public class MutantReplay {
 	public static void replayMetaProgramWith(File target, String _package) throws Exception {
 		// if the target is a file, so load the class and apply the initial function
 		if (target.isFile()) {
-			System.out.println("******************"+target.getName()+"******************");
 			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
 			replayMetaProgramWith(clazz);
 						
@@ -69,6 +68,7 @@ public class MutantReplay {
 	}
 
 	public static void replayMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
+		System.out.println("******************"+TEST_CLASS.getName()+"******************");
 
 		boolean debug = false;
 
@@ -98,7 +98,6 @@ public class MutantReplay {
 		if (debug) { core.addListener(new TextListener(System.out)); }
 
 		List<Selector> selectors = Selector.getAllSelectors();
-		
 
 		// if (selectors.isEmpty())
 		// // There's no hot spot in program. Add one to run it at least once
@@ -119,8 +118,9 @@ public class MutantReplay {
 		
 		for(int mut = 0; mut < mutants.length;mut++ ){
 				Config conf = Config.getInitInstance();
+								
 				Map<String,Integer> mapedConf = conf.getConfig(mutants[mut].getPath()).get(selectors.get(0).getLocationClass().getName());
-			
+	
 				Set<String> cles = mapedConf.keySet();
 				
 				int[] options = new int[selectors.size()];
@@ -178,6 +178,8 @@ public class MutantReplay {
 
 		System.out.println("killed "+failures.size());
 		System.out.println("alive "+successes.size());
+		Selector.reset();
+		
 		// Show result summary
 		// Sets.newHashSet(failures2.keys()).forEach(k -> {
 		// System.out.println(String.format("\n-- Cases with %s", k));

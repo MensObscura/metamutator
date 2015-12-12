@@ -17,6 +17,7 @@ import spoon.reflect.declaration.CtConstructor;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtField;
 import spoon.reflect.reference.CtTypeReference;
+import spoon.support.reflect.reference.SpoonClassNotFoundException;
 
 /**
  * inserts a mutation hotspot for each binary operator
@@ -90,6 +91,12 @@ public class BinaryOperatorMetaMutator extends
 				
 		if (operand.getType().toString().equals(CtTypeReference.NULL_TYPE_NAME))
 			return false;
+		
+		try {
+			operand.getType().getActualClass();
+		} catch (SpoonClassNotFoundException e) {
+			return false;
+		}
 		
 		return operand.getType().getSimpleName().equals("int")
 			|| operand.getType().getSimpleName().equals("long")

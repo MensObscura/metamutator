@@ -52,6 +52,9 @@ public class VariabletoNullMetaMutator extends
 					return false;
 				}
 				
+				if (((CtRHSReceiver)element).getAssignment() == null)
+					return false;
+				
 				CtTypeReference type = ((CtRHSReceiver)element).getAssignment().getType();
 				
 				if (type == null)
