@@ -19,13 +19,7 @@ public class MutantSearchTest {
 	@Test
 	public void TestMutantSearchFile () throws Exception
 	{
-		// we spoon the files first
-		Launcher l = new Launcher();
-        l.addInputResource("src/test/java/search_replay_src");
-        l.setSourceOutputDirectory("src/test/java/search_replay_spoon");
-        l.addProcessor(new BinaryOperatorMetaMutator());
-        l.addProcessor(new VariabletoNullMetaMutator());
-        l.run();
+		
 		
 		File f = new File("results/fail/search_replay_test.SearchReplayTestClass");
 		File s = new File("results/success/search_replay_test.SearchReplayTestClass");
@@ -37,27 +31,25 @@ public class MutantSearchTest {
 		assertTrue(f.exists());
 		assertTrue(s.exists());
 		
-		File fm01 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant01.txt");
-		File fm11 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant11.txt");
-		File fm12 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant12.txt");
-		File fm13 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant13.txt");
+		File fm01 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op2.txt");
+		File fm11 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op3.txt");
+		File fm12 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op4.txt");
+		File fm13 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op2.txt");
 		
-		File fm00 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant00.txt");
-		File fm10 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant10.txt");
-		File fm14 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant14.txt");
-		File fm15 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant15.txt");
+		File fm00 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op1.txt");
+		File fm10 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op5.txt");
+		File fm14 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op6.txt");
+		File fm15 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op1.txt");
 		
-		File sm01 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant01.txt");
-		File sm11 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant11.txt");
-		File sm12 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant12.txt");
-		File sm13 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant13.txt");
-
-
-		
-		File sm00 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant00.txt");
-		File sm10 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant10.txt");
-		File sm14 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant14.txt");
-		File sm15 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant15.txt");
+		File sm01 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op2.txt");
+		File sm11 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op3.txt");
+		File sm12 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op4.txt");
+		File sm13 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op2.txt");
+	
+		File sm00 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op1.txt");
+		File sm10 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op5.txt");
+		File sm14 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op6.txt");
+		File sm15 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op1.txt");
 
 		assertTrue(fm01.exists());
 		assertTrue(fm11.exists());
@@ -91,13 +83,8 @@ public class MutantSearchTest {
 	public void TestMutantSearchDir () throws Exception
 	{
 		
-		Launcher l = new Launcher();
-        l.addInputResource("src/test/java/search_replay_src");
-        l.setSourceOutputDirectory("src/test/java/search_replay_spoon");
-        l.addProcessor(new BinaryOperatorMetaMutator());
-        l.addProcessor(new VariabletoNullMetaMutator());
-        l.run();
 		
+   
 		File f = new File("results/fail/search_replay_test.SearchReplayTestClass");
 		File s = new File("results/success/search_replay_test.SearchReplayTestClass");
 		File fb = new File("results/fail/search_replay_test.SearchReplayTestClassBis");
@@ -105,7 +92,7 @@ public class MutantSearchTest {
 		
 
 		
-		MutantSearchSpaceExplorator.runMetaProgramIn("src/test/java/search_replay_test");
+		MutantSearchSpaceExplorator.runMetaProgramIn("target/test-classes/search_replay_test");
 		
 
 		assertTrue(f.exists());
@@ -114,25 +101,96 @@ public class MutantSearchTest {
 		assertTrue(sb.exists());
 		
 
-		File fom = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant01.txt");
-		File som = new File("results/sucess/search_replay_test.SearchReplayTestClass/mutant02.txt");
-		File fvm = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant11.txt");
-		File svm = new File("results/sucess/search_replay_test.SearchReplayTestClass/mutant12.txt");
+		File fm01 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op2.txt");
+		File fm11 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op3.txt");
+		File fm12 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op4.txt");
+		File fm13 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op2.txt");
+		
+		File fm00 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op1.txt");
+		File fm10 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op5.txt");
+		File fm14 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op6.txt");
+		File fm15 = new File("results/fail/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op1.txt");
+		
+		File sm01 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op2.txt");
+		File sm11 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op3.txt");
+		File sm12 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op4.txt");
+		File sm13 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op2.txt");
 
-		File fbom = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant03.txt");
-		File sbom = new File("results/sucess/search_replay_test.SearchReplayTestClassBis/mutant04.txt");
-		File fbvm = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant13.txt");
-		File sbvm = new File("results/sucess/search_replay_test.SearchReplayTestClassBis/mutant14.txt");
+
 		
-		assertTrue(fom.exists());
-		assertTrue(som.exists());
-		assertTrue(fvm.exists());
-		assertTrue(svm.exists());
+		File sm00 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op1.txt");
+		File sm10 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op5.txt");
+		File sm14 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_binaryLogicalOperatorHotSpot3_Op6.txt");
+		File sm15 = new File("results/success/search_replay_test.SearchReplayTestClass/mutant_variableNullHotSpot3_Op1.txt");
+
+		assertTrue(fm01.exists());
+		assertTrue(fm11.exists());
+		assertTrue(fm12.exists());
+		assertTrue(fm13.exists());
 		
-		assertTrue(fbom.exists());
-		assertTrue(sbom.exists());
-		assertTrue(fbvm.exists());
-		assertTrue(sbvm.exists());
+		assertFalse(fm00.exists());
+		assertFalse(fm10.exists());
+		assertFalse(fm14.exists());
+		assertFalse(fm15.exists());
+
+		
+		
+		assertFalse(sm01.exists());
+		assertFalse(sm11.exists());
+		assertFalse(sm12.exists());
+		assertFalse(sm13.exists());
+
+		
+		assertTrue(sm00.exists());
+		assertTrue(sm10.exists());
+		assertTrue(sm14.exists());
+		assertTrue(sm15.exists());
+		
+		File fm31 = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op2.txt");
+		File fm41 = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op3.txt");
+		File fm42 = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op4.txt");
+		File fm43 = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant_variableNullHotSpot4_Op2.txt");
+		
+		File fm30 = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op1.txt");
+		File fm40 = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op5.txt");
+		File fm44 = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op6.txt");
+		File fm45 = new File("results/fail/search_replay_test.SearchReplayTestClassBis/mutant_variableNullHotSpot4_Op1.txt");
+		
+		File sm31 = new File("results/success/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op2.txt");
+		File sm41 = new File("results/success/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op3.txt");
+		File sm42 = new File("results/success/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op4.txt");
+		File sm43 = new File("results/success/search_replay_test.SearchReplayTestClassBis/mutant_variableNullHotSpot4_Op2.txt");
+
+
+		
+		File sm30 = new File("results/success/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op1.txt");
+		File sm40 = new File("results/success/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op5.txt");
+		File sm44 = new File("results/success/search_replay_test.SearchReplayTestClassBis/mutant_binaryLogicalOperatorHotSpot4_Op6.txt");
+		File sm45 = new File("results/success/search_replay_test.SearchReplayTestClassBis/mutant_variableNullHotSpot4_Op1.txt");
+
+		assertTrue(fm31.exists());
+		assertTrue(fm41.exists());
+		assertTrue(fm42.exists());
+		assertTrue(fm43.exists());
+		
+		assertFalse(fm30.exists());
+		assertFalse(fm40.exists());
+		assertFalse(fm44.exists());
+		assertFalse(fm45.exists());
+
+		
+		
+		assertFalse(sm31.exists());
+		assertFalse(sm41.exists());
+		assertFalse(sm42.exists());
+		assertFalse(sm43.exists());
+
+		
+		assertTrue(sm30.exists());
+		assertTrue(sm40.exists());
+		assertTrue(sm44.exists());
+		assertTrue(sm45.exists());
+
 
 	}
 }

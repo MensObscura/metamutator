@@ -61,8 +61,9 @@ public class MutantSearchSpaceExplorator {
 				else
 					runMetaProgramWith(file, target.getName());
 			}
+			
 		}
-				
+				System.out.println(Selector.getAllSelectors().size());
 	}
 
 	public static void runMetaProgramWith(Class<?> TEST_CLASS) throws Exception {
@@ -150,7 +151,7 @@ public class MutantSearchSpaceExplorator {
 							+ Arrays.toString(strOptions));
 
 					// On essaye avec renameTo
-					File dest = new File(success.getPath()+"/mutant"+sel+""+k+".txt");
+					File dest = new File(success.getPath()+"/mutant"+selectors.get(sel).getId()+"_Op"+(k+1)+".txt");
 					new File("config.txt").renameTo(dest);
 				} else {
 					String txt = String
@@ -165,7 +166,7 @@ public class MutantSearchSpaceExplorator {
 					failures.add(txt);
 					failures2.put(result.getFailureCount(), txt);
 					System.out.println(result.getFailures().get(0).getException());
-					File dest = new File(fail.getPath()+"/mutant"+sel+""+k+".txt");
+					File dest = new File(fail.getPath()+"/mutant"+selectors.get(sel).getId()+"_Op"+(k+1)+".txt");
 					new File("config.txt").renameTo(dest);
 				}
 			}
@@ -192,7 +193,7 @@ public class MutantSearchSpaceExplorator {
 		// System.out.println("Oops, sorry, we could find a successful option");
 		// else
 		// successes.forEach(System.out::println);
-
+	
 	}
 
 	/**

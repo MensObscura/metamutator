@@ -117,7 +117,6 @@ public class MutantReplay {
 		
 		for(int mut = 0; mut < mutants.length;mut++ ){
 				Config conf = Config.getInitInstance();
-				System.out.println(TEST_CLASS.getName());
 				Map<String,Integer> mapedConf = conf.getConfig(mutants[mut].getPath()).get(selectors.get(0).getLocationClass().getName());
 			
 				Set<String> cles = mapedConf.keySet();
