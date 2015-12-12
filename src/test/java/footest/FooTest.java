@@ -32,7 +32,7 @@ public class FooTest {
     
 	@Test
     public void testOp4() {
-        Assert.assertEquals("Theobaldie",  foo.op4());
+        Assert.assertEquals(true,  foo.op4());
     }
 
 }

@@ -88,16 +88,16 @@ public class BinaryOperatorMetaMutator extends
 	}
 
 	private boolean isNumber(CtExpression<?> operand) {
-				
-		if (operand.getType().toString().equals(CtTypeReference.NULL_TYPE_NAME))
-			return false;
 		
 		try {
 			operand.getType().getActualClass();
-		} catch (SpoonClassNotFoundException e) {
+		} catch (Exception e) {
 			return false;
 		}
-		
+				
+		if (operand.getType().toString().equals(CtTypeReference.NULL_TYPE_NAME))
+			return false;
+				
 		return operand.getType().getSimpleName().equals("int")
 			|| operand.getType().getSimpleName().equals("long")
 			|| operand.getType().getSimpleName().equals("byte")

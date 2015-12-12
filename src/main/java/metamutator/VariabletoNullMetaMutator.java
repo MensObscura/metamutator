@@ -10,6 +10,7 @@ import spoon.processing.AbstractProcessor;
 import spoon.reflect.code.BinaryOperatorKind;
 import spoon.reflect.code.CtBinaryOperator;
 import spoon.reflect.code.CtCodeSnippetExpression;
+import spoon.reflect.code.CtConstructorCall;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtRHSReceiver;
 import spoon.reflect.declaration.CtAnonymousExecutable;
@@ -18,6 +19,7 @@ import spoon.reflect.declaration.CtConstructor;
 import spoon.reflect.declaration.CtElement;
 import spoon.reflect.declaration.CtField;
 import spoon.reflect.reference.CtTypeReference;
+import spoon.support.reflect.code.CtConstructorCallImpl;
 
 /**
  * inserts a mutation hotspot for each binary operator
@@ -39,11 +41,12 @@ public class VariabletoNullMetaMutator extends
 		// if (element.getParent(CtAnonymousExecutable.class)!=null) {
 				// System.out.println(element.getParent(CtAnonymousExecutable.class));
 				// }
+		
 				if(!(element instanceof CtRHSReceiver))
 					return false;
 				try {
 					Selector.getTopLevelClass(element);
-				} catch (NullPointerException e) {
+				} catch (Exception e) {
 					return false;
 				}
 
@@ -77,7 +80,7 @@ public class VariabletoNullMetaMutator extends
 	 * @param operators
 	 */
 	private void mutateOperator(final CtExpression expression, EnumSet<Null> operators) {
-		
+				
 		if (alreadyInHotsSpot(expression)
 				|| expression.toString().contains(".is(\"")) {
 			System.out
@@ -85,15 +88,14 @@ public class VariabletoNullMetaMutator extends
 					.format("Expression '%s' ignored because it is included in previous hot spot",
 							expression));
 			return;
-		}
-		
-		
+		}		
 
 		int thisIndex = ++index;
 		
 		String actualExpression = expression.toString();
-		String newExpression = String.format("(%s%s.is(%s))?"+actualExpression+":null",PREFIX,thisIndex,"metamutator.Null.NO");
 
+		String newExpression = String.format("(%s%s.is(%s))?"+actualExpression+":null",PREFIX,thisIndex,"metamutator.Null.NO");
+		
 		CtCodeSnippetExpression codeSnippet = getFactory().Core()
 				.createCodeSnippetExpression();
 		codeSnippet.setValue('(' + newExpression + ')');

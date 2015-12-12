@@ -9,7 +9,7 @@ import org.junit.Test;
 import footest.FooTest;
 import metamutator.MutantReplay;
 
-public class MutantReplayTest {
+public class ReplayMutantTest {
 	
 	/**
 	 * Here we test one class in the replay mutant and check if the result is good
@@ -32,42 +32,32 @@ public class MutantReplayTest {
 		assertTrue(f.exists());
 		assertTrue(s.exists());
 		
-		File fm01 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot1_Op1.txt");
 		File fm02 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot1_Op2.txt");
 
-		File fm03 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op1.txt");
 		File fm04 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op2.txt");
 		File fm05 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op3.txt");
 		File fm06 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op4.txt");
 		File fm07 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op5.txt");
 		File fm08 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot2_Op6.txt");
 		
-		File fm09 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot3_Op1.txt");
 		File fm10 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot3_Op2.txt");
 		
-		File fm11 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot4_Op1.txt");
 		File fm12 = new File("results/fail.replay/footest.FooTest/mutant_binaryLogicalOperatorHotSpot4_Op2.txt");
 		
-		File fm13 = new File("results/fail.replay/footest.FooTest/mutant_variableNullHotSpot1_Op1.txt");
 		File fm14 = new File("results/fail.replay/footest.FooTest/mutant_variableNullHotSpot1_Op2.txt");
 				
 
-		assertEquals(14,f.listFiles().length);
+		assertEquals(9,f.listFiles().length);
 		assertEquals(0,s.listFiles().length);
 
-		assertTrue(fm01.exists());
 		assertTrue(fm02.exists());
-		assertTrue(fm03.exists());
 		assertTrue(fm04.exists());
 		assertTrue(fm05.exists());
 		assertTrue(fm06.exists());
 		assertTrue(fm07.exists());
 		assertTrue(fm08.exists());
-		assertTrue(fm09.exists());
 		assertTrue(fm10.exists());
-		assertTrue(fm11.exists());
 		assertTrue(fm12.exists());
-		assertTrue(fm13.exists());
 		assertTrue(fm14.exists());
 			
 
