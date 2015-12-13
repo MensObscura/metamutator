@@ -33,6 +33,7 @@ public class MutantReplay {
 	public static void replayMetaProgramIn(String target) throws Exception {
 		
 		File file = new File(target);
+		File filep = file.getParentFile();
 		
 		// this function doesn't work for a file and for inexistant file
 		if (!file.exists()) {
@@ -45,7 +46,7 @@ public class MutantReplay {
 		successes = 0;
 		
 		// make urls for classloader
-		url = file.toURI().toURL();
+		url = filep.toURI().toURL();
 		urls = new URL[]{url};
 		// create classloader
 		cl = new URLClassLoader(urls);
@@ -269,7 +270,4 @@ public class MutantReplay {
 		};
 	}
 	
-	public static void main(String[] args) throws Exception {
-		replayMetaProgramIn("target/classes/temporaire2/");
-	}
 }

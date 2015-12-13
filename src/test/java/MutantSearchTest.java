@@ -92,8 +92,6 @@ public class MutantSearchTest {
 		File fb = new File("results/fail/search_replay_test.SearchReplayTestClassBis");
 		File sb = new File("results/success/search_replay_test.SearchReplayTestClassBis");
 		
-
-		
 		MutantSearchSpaceExplorator.runMetaProgramIn("target/test-classes/search_replay_test");
 		
 
@@ -201,8 +199,6 @@ public class MutantSearchTest {
     @AfterClass
     public static void after() throws IOException {
 	    Selector.reset();
-	    File results = new File("results");
-	    FileUtils.deleteDirectory(results);
     }
 	
 }

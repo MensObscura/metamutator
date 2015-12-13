@@ -72,12 +72,12 @@ public class BinaryOperatorMetaMutator extends
 
 	public void process(CtBinaryOperator<Boolean> binaryOperator) {
 		BinaryOperatorKind kind = binaryOperator.getKind();
-
+		
 		if (LOGICAL_OPERATORS.contains(kind)) {
 			mutateOperator(binaryOperator, LOGICAL_OPERATORS);
 		} else if (COMPARISON_OPERATORS.contains(kind)) {
-			if (isNumber(binaryOperator.getLeftHandOperand())
-			 || isNumber(binaryOperator.getRightHandOperand()))
+			if ((isNumber(binaryOperator.getLeftHandOperand())
+			 || isNumber(binaryOperator.getRightHandOperand())) && (!binaryOperator.getRightHandOperand().toString().equals("null")))
 			{
 				mutateOperator(binaryOperator, COMPARISON_OPERATORS);
 			}
@@ -88,7 +88,7 @@ public class BinaryOperatorMetaMutator extends
 	}
 
 	private boolean isNumber(CtExpression<?> operand) {
-		
+								
 		try {
 			operand.getType().getActualClass();
 		} catch (Exception e) {
@@ -96,6 +96,9 @@ public class BinaryOperatorMetaMutator extends
 		}
 				
 		if (operand.getType().toString().equals(CtTypeReference.NULL_TYPE_NAME))
+			return false;
+		
+		if (operand.toString().contains(".class"))
 			return false;
 				
 		return operand.getType().getSimpleName().equals("int")

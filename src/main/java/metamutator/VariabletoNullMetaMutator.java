@@ -13,6 +13,7 @@ import spoon.reflect.code.CtCodeSnippetExpression;
 import spoon.reflect.code.CtConstructorCall;
 import spoon.reflect.code.CtExpression;
 import spoon.reflect.code.CtRHSReceiver;
+import spoon.reflect.code.CtStatement;
 import spoon.reflect.declaration.CtAnonymousExecutable;
 import spoon.reflect.declaration.CtClass;
 import spoon.reflect.declaration.CtConstructor;
@@ -25,7 +26,7 @@ import spoon.support.reflect.code.CtConstructorCallImpl;
  * inserts a mutation hotspot for each binary operator
  */
 public class VariabletoNullMetaMutator extends
-		AbstractProcessor<CtElement> {
+		AbstractProcessor<CtStatement> {
 
 	public static final String PREFIX =  "_variableNullHotSpot";
 	private static int index = 0;
@@ -37,7 +38,7 @@ public class VariabletoNullMetaMutator extends
 	private Set<CtElement> hostSpots = Sets.newHashSet();
 
 	@Override
-	public boolean isToBeProcessed(CtElement element) {
+	public boolean isToBeProcessed(CtStatement element) {
 		// if (element.getParent(CtAnonymousExecutable.class)!=null) {
 				// System.out.println(element.getParent(CtAnonymousExecutable.class));
 				// }
@@ -62,12 +63,15 @@ public class VariabletoNullMetaMutator extends
 				
 				if (type == null)
 					return false;
+				
+				if (element.toString().contains("java.lang.String.format"))
+					return false;
 
 				return !((CtRHSReceiver)element).getAssignment().getType().isPrimitive() 
 						&& (element.getParent(CtAnonymousExecutable.class) == null);
 	}
 
-	public void process(CtElement assignment) {
+	public void process(CtStatement assignment) {
 		
 		mutateOperator(((CtRHSReceiver)assignment).getAssignment(), NULLORNOTNULL);
 
@@ -93,7 +97,7 @@ public class VariabletoNullMetaMutator extends
 		int thisIndex = ++index;
 		
 		String actualExpression = expression.toString();
-
+		
 		String newExpression = String.format("(%s%s.is(%s))?"+actualExpression+":null",PREFIX,thisIndex,"metamutator.Null.NO");
 		
 		CtCodeSnippetExpression codeSnippet = getFactory().Core()
