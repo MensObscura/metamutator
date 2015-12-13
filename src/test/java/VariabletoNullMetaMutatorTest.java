@@ -2,6 +2,8 @@ import static org.apache.commons.lang.reflect.MethodUtils.invokeExactMethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.junit.BeforeClass;
+
 import metamutator.Selector;
 import metamutator.VariabletoNullMetaMutator;
 
@@ -13,11 +15,15 @@ import spoon.reflect.visitor.filter.NameFilter;
 import bsh.Interpreter;
 
 public class VariabletoNullMetaMutatorTest {
+	
+    @BeforeClass
+    public static void before() {
+    	Selector.reset();
+    }
+
 
     @Test
     public void testChangetoNullMetaMutator() throws Exception {
-    	
-    	Selector.reset();
     	
         // build the model and apply the transformation
         Launcher l = new Launcher();
@@ -65,4 +71,6 @@ public class VariabletoNullMetaMutatorTest {
 
        
     }
+    
+    
 }

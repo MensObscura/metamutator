@@ -129,7 +129,7 @@ public class MutantReplay {
 		// {
 		
 		int nattempts=0;
-		
+				
 		for(int mut = 0; mut < mutants.length;mut++ ){
 				Config conf = Config.getInitInstance();
 								
@@ -192,6 +192,7 @@ public class MutantReplay {
 
 		System.out.println("killed "+failures.size());
 		System.out.println("alive "+successes.size());
+		
 		Selector.reset();
 		
 		int[] val = {failures.size(),successes.size()};
@@ -268,7 +269,7 @@ public class MutantReplay {
 		};
 	}
 	
-	//public static void main(String[] args) throws Exception {
-	//	replayMetaProgramIn("target/classes/temporaire2/");
-	//}
+	public static void main(String[] args) throws Exception {
+		replayMetaProgramIn("target/classes/temporaire2/");
+	}
 }

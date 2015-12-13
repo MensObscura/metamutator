@@ -1,5 +1,7 @@
 package footest;
 
+import java.nio.channels.Selector;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,5 +36,5 @@ public class FooTest {
     public void testOp4() {
         Assert.assertEquals(true,  foo.op4());
     }
-
+	
 }

@@ -59,6 +59,11 @@
                             <configuration>
 <!--                                 the following is required to have the same execution semantics as eclipse (hence all tests passing) -->
                                 <useSystemClassLoader>false</useSystemClassLoader>
+				<excludes>
+					<exclude>footest/FooTest.java</exclude>
+					<exclude>search_replay_test/SearchReplayTestClass.java</exclude>
+					<exclude>search_replay_test/SearchReplayTestClassBis.java</exclude>
+				</excludes>
                             </configuration>
                         </plugin>
                 </plugins>

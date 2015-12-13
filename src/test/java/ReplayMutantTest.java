@@ -1,15 +1,26 @@
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import footest.FooTest;
 import metamutator.MutantReplay;
+import metamutator.Selector;
 
+/*
+ * This test class works only if you run MutantSearchTest before...
+ */
+@Ignore
 public class ReplayMutantTest {
+		
 	
 	/**
 	 * Here we test one class in the replay mutant and check if the result is good
@@ -19,8 +30,7 @@ public class ReplayMutantTest {
 	
 	  @Test
 	  public void TestMutantReplayFile() throws Exception{
-		
-			
+		  
 		MutantReplay.replayMetaProgramWith(FooTest.class);
 			
 		File f = new File("results/fail.replay/footest.FooTest");
@@ -60,10 +70,9 @@ public class ReplayMutantTest {
 		assertTrue(fm12.exists());
 		assertTrue(fm14.exists());
 			
-
+		Selector.reset();
 	  }
 	  
-	  	  
 	  @Test
 	  public void TestMutantReplayDir() throws Exception{
 			File f;
@@ -71,9 +80,8 @@ public class ReplayMutantTest {
 			File fb;
 			File sb ;
 			
-
-		
 			MutantReplay.replayMetaProgramIn("target/test-classes/search_replay_test");
+
 			
 			f = new File("results/fail.replay/search_replay_test.SearchReplayTestClass");
 			s = new File("results/success.replay/search_replay_test.SearchReplayTestClass");
@@ -178,5 +186,12 @@ public class ReplayMutantTest {
 
 
 	  }
+	 
+	    @AfterClass
+	    public static void after() throws IOException {
+	    	Selector.reset();
+	    	File results = new File("results");
+	    	FileUtils.deleteDirectory(results);
+	    }
 
 }

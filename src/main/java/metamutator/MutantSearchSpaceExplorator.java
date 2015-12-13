@@ -19,7 +19,7 @@ import com.google.common.collect.Multimaps;
 import configuration.Config;
 
 public class MutantSearchSpaceExplorator {
-	
+		
 	static URL url;
 	static URL[] urls;
 	static ClassLoader cl;
@@ -62,6 +62,7 @@ public class MutantSearchSpaceExplorator {
 			Class<?> clazz = cl.loadClass(_package+"."+target.getName().replace(".class", ""));
 			
 			int[] val = runMetaProgramWith(clazz);
+
 			failures += val[0];
 			successes += val[1];
 			
@@ -188,6 +189,7 @@ public class MutantSearchSpaceExplorator {
 
 		System.out.println("killed "+failures.size());
 		System.out.println("alive "+successes.size());
+		
 		Selector.reset();
 		
 		int[] val = {failures.size(),successes.size()};
@@ -263,8 +265,9 @@ public class MutantSearchSpaceExplorator {
 			}
 		};
 	}
+	
 
 	public static void main(String[] args) throws Exception {
-		runMetaProgramIn("/home/thibaud/M2/OPL/commons-math/src/test/java");
+		runMetaProgramIn("target/classes/temporaire2");
 	}
 }

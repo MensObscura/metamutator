@@ -1,17 +1,24 @@
+
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import footest.FooTest;
-import metamutator.BinaryOperatorMetaMutator;
 import metamutator.MutantSearchSpaceExplorator;
-import metamutator.VariabletoNullMetaMutator;
-import spoon.Launcher;
+import metamutator.Selector;
 
 public class MutantSearchTest {
-
+	
+    @BeforeClass
+    public static void before() {
+    	Selector.reset();
+    }
 
 	/**
 	 * We launch the search of selector and try them
@@ -188,4 +195,14 @@ public class MutantSearchTest {
 
 
 	}
+	
+	
+	 
+    @AfterClass
+    public static void after() throws IOException {
+	    Selector.reset();
+	    File results = new File("results");
+	    FileUtils.deleteDirectory(results);
+    }
+	
 }

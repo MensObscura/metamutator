@@ -2,6 +2,8 @@ import static org.apache.commons.lang.reflect.MethodUtils.invokeExactMethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.junit.BeforeClass;
+
 import metamutator.BinaryOperatorMetaMutator;
 import metamutator.Selector;
 
@@ -13,12 +15,16 @@ import spoon.reflect.visitor.filter.NameFilter;
 import bsh.Interpreter;
 
 public class BinaryOperatorMetaMutatorTest {
+	
+    @BeforeClass
+    public static void before() {
+    	Selector.reset();
+    }
+	
 
     @Test
     public void testBinaryOperatorMetaMutator() throws Exception {
-    	
-    	Selector.reset();
-    	
+    	    	
         // build the model and apply the transformation
         Launcher l = new Launcher();
         l.addInputResource("src/test/java/foo");
@@ -78,6 +84,7 @@ public class BinaryOperatorMetaMutatorTest {
         sel1.choose(3); // LT
         assertEquals(false, invokeExactMethod(o, "op2", new Object[] {3, 3}));
         assertEquals(true, invokeExactMethod(o, "op2", new Object[] {3, 4}));        
-       
+ 
     }
+    
 }
