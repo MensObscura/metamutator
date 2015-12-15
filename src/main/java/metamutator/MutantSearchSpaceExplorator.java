@@ -87,9 +87,9 @@ public class MutantSearchSpaceExplorator {
 		JUnitCore core = new JUnitCore();
 
 		//output folder
-		File fail = new File("results/fail/"+TEST_CLASS.getName());
+		File fail = new File("results/fail/"+TEST_CLASS.getName().replace(".", "/"));
 		fail.mkdirs();
-		File success = new File("results/success/"+TEST_CLASS.getName());
+		File success = new File("results/success/"+TEST_CLASS.getName().replace(".", "/"));
 		success.mkdirs();
 
 		// we first run the test suite once to load all classes and their static
@@ -138,14 +138,13 @@ public class MutantSearchSpaceExplorator {
 							.getChosenOptionDescription();
 					for(int o = 0; o < selectors.get(i).getOptionCount();o++ ){
 
-
 						boolean value =(o == 0)?true:false;
 						if(i == sel && o ==k){
 							conf.write(selectors.get(sel).getLocationClass().getName()+":"+selectors.get(sel).getId()+":"+selectors.get(sel).getOption()[k]+":true");
 						}else{
 							if(i == sel)
 								value = false;
-							
+						
 							conf.write(selectors.get(i).getLocationClass().getName()+":"+selectors.get(i).getId()+":"+selectors.get(i).getOption()[o]+":"+value);
 						}
 

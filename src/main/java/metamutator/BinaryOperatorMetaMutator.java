@@ -45,6 +45,7 @@ public class BinaryOperatorMetaMutator extends
 		// if (element.getParent(CtAnonymousExecutable.class)!=null) {
 		// System.out.println(element.getParent(CtAnonymousExecutable.class));
 		// }
+	
 		try {
 			Selector.getTopLevelClass(element);
 		} catch (NullPointerException e) {
