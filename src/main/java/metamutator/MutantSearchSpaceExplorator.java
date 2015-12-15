@@ -87,9 +87,9 @@ public class MutantSearchSpaceExplorator {
 		JUnitCore core = new JUnitCore();
 
 		//output folder
-		File fail = new File("results/fail/"+TEST_CLASS.getName());
+		File fail = new File("results/fail/"+TEST_CLASS.getName().replace(".", "/"));
 		fail.mkdirs();
-		File success = new File("results/success/"+TEST_CLASS.getName());
+		File success = new File("results/success/"+TEST_CLASS.getName().replace(".", "/"));
 		success.mkdirs();
 
 		// we first run the test suite once to load all classes and their static

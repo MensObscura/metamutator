@@ -89,13 +89,16 @@ public class MutantReplay {
 
 		JUnitCore core = new JUnitCore();
 		
-		//output folder
-		File fail = new File("results/fail.replay/"+TEST_CLASS.getName());
-		fail.mkdirs();
-		File success = new File("results/success.replay/"+TEST_CLASS.getName());
-		success.mkdirs();
-		
-		String path = "results/fail/"+TEST_CLASS.getName();
+		//output folder	
+		File fail = new File("results/fail.replay/"+TEST_CLASS.getName().replace(".", "/"));
+ 		fail.mkdirs();
+
+		File success = new File("results/success.replay/"+TEST_CLASS.getName().replace(".", "/"));
+ 		success.mkdirs();
+ 
+ 			
+		String path = "results/fail/"+TEST_CLASS.getName().replace(".", "/");
+	
 		File source =new File(path);
 		File[] mutants ;
 		if(source.exists() && source.isDirectory()){

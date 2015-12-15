@@ -197,6 +197,8 @@ public class Selector<E> {
 	}
 	
 	public Class getLocationClass(){
+	if(locationClass == null)
+				locationClass = Object.class;
 		return locationClass;
 	}
 	
